@@ -24,8 +24,7 @@ import {
   Clock,
   Award,
 } from 'lucide-react';
-import { INITIAL_PRODUCTS, INITIAL_REVIEWS } from '@/lib/data/mock-products';
-import { ProductWithVariants, ProductVariant } from '@/types/database.types';
+import { ProductWithVariants, ProductVariant, Review } from '@/types/database.types';
 import { formatCurrency, calculateDiscountPercentage } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
 import { Badge } from '@/components/ui/badge';
@@ -44,10 +43,8 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const slug = params.slug as string;
 
-  const [product, setProduct] = useState<ProductWithVariants | null>(
-    INITIAL_PRODUCTS.find((p) => p.slug === slug) || null
-  );
-  const [loading, setLoading] = useState(!product);
+  const [product, setProduct] = useState<ProductWithVariants | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`/api/products?slug=${slug}`)
@@ -90,9 +87,7 @@ export default function ProductDetailPage() {
   }, [product]);
 
   // Customer Reviews State & Interactive Review Form
-  const [reviewsList, setReviewsList] = useState(
-    INITIAL_REVIEWS.filter((r) => r.product_id === product?.id)
-  );
+  const [reviewsList, setReviewsList] = useState<Review[]>([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newRating, setNewRating] = useState(5);
   const [reviewName, setReviewName] = useState('');
@@ -132,8 +127,8 @@ export default function ProductDetailPage() {
     ? calculateDiscountPercentage(selectedVariant.compare_at_price, selectedVariant.price)
     : 0;
 
-  // Related products in same or complementary category
-  const relatedProducts = INITIAL_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  // Related products: populated once a real related-products fetch is wired up
+  const relatedProducts: ProductWithVariants[] = [];
 
   const handleAddToCart = () => {
     addItem(product, selectedVariant, quantity);

@@ -19,6 +19,7 @@ import {
   ChevronUp,
   FileText,
   Gift,
+  MessageSquare,
 } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
@@ -629,39 +630,38 @@ export function CartDrawer() {
                   }
                 }}
                 disabled={isShopifyCheckoutLoading}
-                className="w-full bg-[#1C0A08] hover:bg-[#2C100D] active:scale-[0.99] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-between group transition-all cursor-pointer disabled:opacity-75"
+                className="w-full min-h-[56px] bg-[#1C0A08] hover:bg-[#2C100D] active:scale-[0.99] text-white font-extrabold py-3 px-4 rounded-xl shadow-lg flex flex-col items-center justify-center gap-1 group transition-all cursor-pointer disabled:opacity-75"
               >
-                <div className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                   {isShopifyCheckoutLoading ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
                   ) : (
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                   )}
                   <span className="text-xs sm:text-sm tracking-wider uppercase font-black">
-                    {isShopifyCheckoutLoading ? 'Connecting to Shopify...' : 'PROCEED TO CHECKOUT'}
+                    {isShopifyCheckoutLoading ? 'Connecting to Shopify...' : 'Proceed to Checkout'}
                   </span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
+                </span>
 
-                {/* Supported Payment Logos / Badges */}
-                <div className="flex items-center gap-1.5 bg-white/10 px-2 py-0.5 rounded-lg text-[10px] font-bold">
+                {/* Supported Payment Trust Badge */}
+                <span className="flex items-center gap-1.5 text-[10px] font-bold text-white/80">
                   <span className="text-emerald-300">Shopify Secure</span>
-                  <span>•</span>
-                  <span className="text-amber-300">UPI/Cards</span>
-                </div>
+                  <span className="text-white/40">•</span>
+                  <span className="text-amber-300">UPI / Cards / NetBanking</span>
+                </span>
               </button>
 
               {/* Direct WhatsApp UPI Alternative */}
-              <div className="flex items-center justify-between text-[11px] pt-0.5 px-1">
-                <Link
-                  href="/checkout"
-                  onClick={() => setIsCartOpen(false)}
-                  className="text-stone-600 hover:text-[#8B1E10] font-semibold underline flex items-center gap-1"
-                >
-                  <span>Or pay via Direct WhatsApp UPI</span>
-                </Link>
-                <span className="text-[10px] text-stone-400 font-medium">100% Encrypted</span>
-              </div>
+              <Link
+                href="/checkout"
+                onClick={() => setIsCartOpen(false)}
+                className="w-full min-h-[44px] flex items-center justify-center gap-2 border-2 border-emerald-700 text-emerald-800 hover:bg-emerald-50 active:scale-[0.99] font-bold text-xs py-2.5 px-4 rounded-xl transition-colors"
+              >
+                <MessageSquare className="w-4 h-4 shrink-0" />
+                <span>Or Pay via WhatsApp UPI</span>
+                <span className="text-[10px] text-emerald-600 font-semibold">(100% Encrypted)</span>
+              </Link>
 
               {/* New Customer / Saraswati Kitchen Trust Stamp */}
               <div className="text-center bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl p-2">

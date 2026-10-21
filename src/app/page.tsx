@@ -4,57 +4,12 @@ import Image from 'next/image';
 import { ArrowRight, Star, Flame, CheckCircle2, HelpCircle, Shield, Clock, Award, Truck } from 'lucide-react';
 import { BannerCarousel } from '@/components/storefront/banner-carousel';
 import { ProductCard } from '@/components/storefront/product-card';
-import { INITIAL_PRODUCTS, INITIAL_REVIEWS } from '@/lib/data/mock-products';
-import { createAdminClient } from '@/lib/supabase/admin';
-import { isShopifyConfigured, getShopifyProducts } from '@/lib/shopify/api';
+import { INITIAL_REVIEWS } from '@/lib/data/mock-products';
+import { getShopifyProducts } from '@/lib/shopify/api';
 import { Button } from '@/components/ui/button';
 
 async function getLiveProducts() {
-  // 1. Try Shopify if configured
-  if (isShopifyConfigured()) {
-    try {
-      const shopifyProducts = await getShopifyProducts({ first: 50 });
-      if (shopifyProducts && shopifyProducts.length > 0) {
-        return shopifyProducts;
-      }
-    } catch (e) {
-      console.warn('Failed to load products from Shopify on homepage:', e);
-    }
-  }
-
-  // 2. Fallback to Supabase
-  try {
-    const supabase = createAdminClient();
-    const { data, error } = await supabase
-      .from('products')
-      .select('*, product_variants(*), categories(id,name,slug)')
-      .eq('active_status', true)
-      .order('created_at', { ascending: false });
-
-    if (!error && data && data.length > 0) {
-      return data.map((p: any) => ({
-        ...p,
-        variants: p.product_variants && p.product_variants.length > 0
-          ? p.product_variants.sort((a: any, b: any) => a.weight_g - b.weight_g)
-          : [
-              {
-                id: `var-${p.id}-250`,
-                product_id: p.id,
-                size_label: '250g',
-                weight_g: 250,
-                price: 349,
-                compare_at_price: 399,
-                stock: 30,
-                is_default: true,
-              },
-            ],
-        category: p.categories || null,
-      }));
-    }
-  } catch (e) {
-    console.error('Failed to load products on homepage:', e);
-  }
-  return INITIAL_PRODUCTS;
+  return getShopifyProducts({ first: 50 });
 }
 
 export default async function HomePage() {

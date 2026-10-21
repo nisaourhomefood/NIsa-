@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, PlusCircle, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, PlusCircle, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -237,7 +237,7 @@ export default function CartPage() {
             </div>
 
             {/* Proceed to Shopify Checkout Button */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <Button
                 size="lg"
                 onClick={async () => {
@@ -247,20 +247,27 @@ export default function CartPage() {
                   }
                 }}
                 disabled={isShopifyCheckoutLoading}
-                className="w-full bg-[#8B1E10] hover:bg-[#72160B] text-white font-extrabold py-3.5 shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+                className="w-full min-h-[56px] bg-[#8B1E10] hover:bg-[#72160B] text-white font-extrabold py-3 shadow-md flex flex-col items-center justify-center gap-1 cursor-pointer disabled:opacity-75"
               >
-                {isShopifyCheckoutLoading ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : null}
-                <span>{isShopifyCheckoutLoading ? 'Connecting to Shopify...' : 'Proceed to Checkout'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="flex items-center gap-2">
+                  {isShopifyCheckoutLoading ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+                  ) : (
+                    <ShieldCheck className="w-4 h-4 text-emerald-300 shrink-0" />
+                  )}
+                  <span>{isShopifyCheckoutLoading ? 'Connecting to Shopify...' : 'Proceed to Checkout'}</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
+                </span>
+                <span className="text-[10px] font-bold text-white/80">Shopify Secure <span className="text-white/40">•</span> UPI / Cards / NetBanking</span>
               </Button>
 
               <Link
                 href="/checkout"
-                className="block text-center text-xs text-stone-600 hover:text-[#8B1E10] font-semibold py-1 hover:underline"
+                className="w-full min-h-[44px] flex items-center justify-center gap-2 border-2 border-emerald-700 text-emerald-800 hover:bg-emerald-50 font-bold text-xs py-2.5 px-4 rounded-xl transition-colors"
               >
-                Or use Direct WhatsApp UPI Order
+                <MessageSquare className="w-4 h-4 shrink-0" />
+                <span>Or Pay via WhatsApp UPI</span>
+                <span className="text-[10px] text-emerald-600 font-semibold">(100% Encrypted)</span>
               </Link>
             </div>
           </div>
