@@ -3,18 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, PlusCircle, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
+import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { INITIAL_PRODUCTS } from '@/lib/data/mock-products';
 
 export default function CartPage() {
   const {
     items,
     updateQuantity,
     removeItem,
-    addItem,
     subtotal,
     discountAmount,
     shippingFee,
@@ -44,10 +42,6 @@ export default function CartPage() {
       setCouponError(res.message);
     }
   };
-
-  const crossSellProducts = INITIAL_PRODUCTS.filter(
-    (p) => !items.some((item) => item.product_id === p.id)
-  ).slice(0, 3);
 
   if (items.length === 0) {
     return (
@@ -136,40 +130,6 @@ export default function CartPage() {
             </div>
           </div>
 
-          {/* Smart Cross-Selling / Complete Your Andhra Box Section */}
-          {crossSellProducts.length > 0 && (
-            <div className="bg-white border border-[#E8DFC9] rounded-2xl p-6 space-y-4 shadow-xs">
-              <div className="border-b border-stone-100 pb-2">
-                <h3 className="text-base font-extrabold text-stone-900">
-                  Complete Your Andhra Box — "If you like this, try..."
-                </h3>
-                <p className="text-xs text-stone-500 font-medium">Add complementary authentic Tenali items to your box</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {crossSellProducts.map((prod) => {
-                  const variant = prod.variants[0];
-                  return (
-                    <div key={prod.id} className="bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl p-3.5 flex flex-col justify-between space-y-2">
-                      <div className="relative aspect-4/3 w-full rounded-lg overflow-hidden bg-stone-100">
-                        <Image src={prod.images[0]} alt={prod.name} fill className="object-cover" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-extrabold text-stone-900 line-clamp-1">{prod.name}</h4>
-                        <span className="text-[11px] font-bold text-[#8B1E10]">{variant.size_label} • {formatCurrency(variant.price)}</span>
-                      </div>
-                      <button
-                        onClick={() => addItem(prod, variant, 1)}
-                        className="w-full bg-[#8B1E10] hover:bg-[#72160B] text-white text-xs font-bold py-1.5 rounded-lg flex items-center justify-center gap-1"
-                      >
-                        <PlusCircle className="w-3.5 h-3.5" /> Add to Cart
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Right: Order Summary Sidebar */}

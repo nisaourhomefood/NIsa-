@@ -24,68 +24,12 @@ import {
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
 import { calculateShippingFee, FREE_SHIPPING_THRESHOLD } from '@/lib/utils/shipping';
-import { INITIAL_PRODUCTS } from '@/lib/data/mock-products';
-
-// 5 Relatable Andhra Quick-Add Products (Matching Reference Screenshot)
-const RELATABLE_ADDONS = [
-  {
-    id: 'relatable-tomato-pickle',
-    name: 'Tenali Country Tomato Pickle',
-    price: 199,
-    compare_at_price: 249,
-    size_label: '250g Jar',
-    tag: 'Homestyle Classic',
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=400&auto=format&fit=crop',
-    category: 'veg-pickle',
-  },
-  {
-    id: 'relatable-gongura-podi',
-    name: 'Gongura Leaf Roasted Podi',
-    price: 149,
-    compare_at_price: 199,
-    size_label: '150g Pouch',
-    tag: 'Spicy Rice Mix',
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400&auto=format&fit=crop',
-    category: 'podi',
-  },
-  {
-    id: 'relatable-mango-avakaya',
-    name: 'Traditional Mango Avakaya',
-    price: 229,
-    compare_at_price: 279,
-    size_label: '250g Jar',
-    tag: 'Summer Special',
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=400&auto=format&fit=crop',
-    category: 'veg-pickle',
-  },
-  {
-    id: 'relatable-nallakaram-podi',
-    name: 'Guntur Nallakaram Karam Podi',
-    price: 139,
-    compare_at_price: 179,
-    size_label: '150g Pouch',
-    tag: 'Idli & Dosa Partner',
-    image: 'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?q=80&w=400&auto=format&fit=crop',
-    category: 'podi',
-  },
-  {
-    id: 'relatable-ghee-sunnundalu',
-    name: 'Pure Ghee Bellam Sunnundalu',
-    price: 249,
-    compare_at_price: 299,
-    size_label: '250g Box',
-    tag: 'Urad Dal & Jaggery',
-    image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?q=80&w=400&auto=format&fit=crop',
-    category: 'sweet',
-  },
-];
 
 export function CartDrawer() {
   const {
     items,
     removeItem,
     updateQuantity,
-    changeItemVariant,
     subtotal,
     discountAmount,
     totalAmount,
@@ -94,7 +38,6 @@ export function CartDrawer() {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
-    addItem,
     proceedToShopifyCheckout,
     isShopifyCheckoutLoading,
   } = useCart();
@@ -147,49 +90,6 @@ export function CartDrawer() {
       return `Add ${formatCurrency(TIER_3 - subtotal)} more for FREE Delivery + 2x 100g Free Podis 🚚`;
     }
     return `🎉 VIP Unlocked: FREE Express Delivery + 2x 100g Free Podis Goodies!`;
-  };
-
-  const handleQuickAdd = (addon: typeof RELATABLE_ADDONS[0]) => {
-    const mockProduct: any = {
-      id: addon.id,
-      name: addon.name,
-      slug: addon.id,
-      category_id: addon.category,
-      product_type: 'non-veg-pickle',
-      short_description: addon.tag,
-      description: addon.name,
-      images: [addon.image],
-      ingredients: [],
-      preparation_info: '',
-      storage_info: '',
-      shelf_life: '6 Months',
-      net_quantity: addon.size_label,
-      featured_status: false,
-      bestseller_status: true,
-      active_status: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      category: { id: 'cat-1', name: addon.category, slug: 'cat', description: '', image_url: addon.image, sort_order: 1, created_at: '', updated_at: '' },
-      reviews_count: 24,
-      average_rating: 4.9,
-      variants: [
-        {
-          id: `var-${addon.id}`,
-          product_id: addon.id,
-          sku: `SKU-${addon.id}`,
-          size_label: addon.size_label,
-          weight_g: 250,
-          price: addon.price,
-          compare_at_price: addon.compare_at_price,
-          stock: 50,
-          is_default: true,
-          created_at: '',
-          updated_at: '',
-        },
-      ],
-    };
-
-    addItem(mockProduct, mockProduct.variants[0], 1);
   };
 
   const shippingEst = calculateShippingFee('522201', subtotal);
@@ -297,16 +197,6 @@ export function CartDrawer() {
               <>
                 <div className="divide-y divide-stone-100">
                   {items.map((item, idx) => {
-                    const matchingProduct = INITIAL_PRODUCTS.find(
-                      (p) => p.id === item.product_id || p.slug === item.slug || p.name === item.name
-                    );
-
-                    const availableVariants = matchingProduct?.variants || [
-                      { id: `${item.product_id}-250`, size_label: '250g', price: item.price, compare_at_price: item.compare_at_price },
-                      { id: `${item.product_id}-500`, size_label: '500g', price: Math.round(item.price * 1.9), compare_at_price: Math.round((item.compare_at_price || item.price * 1.15) * 1.9) },
-                      { id: `${item.product_id}-1000`, size_label: '1kg', price: Math.round(item.price * 3.6), compare_at_price: Math.round((item.compare_at_price || item.price * 1.15) * 3.6) },
-                    ];
-
                     return (
                       <div key={`${item.variant_id}-${item.product_id || ''}-${idx}`} className="py-3.5 first:pt-0 space-y-2.5">
                         <div className="flex gap-3 items-start">
@@ -337,33 +227,12 @@ export function CartDrawer() {
                           </div>
                         </div>
 
-                        {/* Interactive Pack Size Selector with Explicit Pricing */}
-                        <div className="bg-[#FAF6F0] p-2 rounded-xl border border-[#E8DFC9] space-y-1">
-                          <span className="text-[9px] font-extrabold text-stone-600 uppercase tracking-wider block">
-                            Choose Pack Size & Price:
+                        {/* Pack Size (edit size/variant on the product page) */}
+                        <div className="bg-[#FAF6F0] p-2 rounded-xl border border-[#E8DFC9] flex items-center justify-between">
+                          <span className="text-[9px] font-extrabold text-stone-600 uppercase tracking-wider">
+                            Pack Size
                           </span>
-                          <div className="grid grid-cols-3 gap-1.5">
-                            {availableVariants.map((v) => {
-                              const isSelected = item.variant_id === v.id || item.size_label.toLowerCase() === v.size_label.toLowerCase();
-                              return (
-                                <button
-                                  key={v.id || v.size_label}
-                                  type="button"
-                                  onClick={() => changeItemVariant(item.variant_id, v as any)}
-                                  className={`text-left p-1.5 rounded-lg transition-all border cursor-pointer ${
-                                    isSelected
-                                      ? 'bg-[#8B1E10] text-white border-[#8B1E10] shadow-xs ring-1 ring-[#8B1E10]'
-                                      : 'bg-white text-stone-700 border-stone-200 hover:border-[#8B1E10]/40'
-                                  }`}
-                                >
-                                  <span className="block text-[10px] font-black">{v.size_label}</span>
-                                  <span className={`block text-[10px] font-extrabold ${isSelected ? 'text-amber-200' : 'text-[#8B1E10]'}`}>
-                                    {formatCurrency(v.price)}
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
+                          <span className="text-xs font-black text-[#8B1E10]">{item.size_label}</span>
                         </div>
 
                         {/* Quantity & Item Total Row */}
@@ -523,54 +392,6 @@ export function CartDrawer() {
                       className="w-full bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl p-2 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#8B1E10] mt-1 resize-none"
                     />
                   )}
-                </div>
-
-                {/* 5 Scrollable Relatable Recommendations Carousel */}
-                <div className="pt-3 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#8B1E10] flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-amber-600" /> Relatable Andhra Pairings
-                    </span>
-                    <span className="text-[10px] text-stone-400 font-medium">Swipe →</span>
-                  </div>
-
-                  {/* Horizontal Scrollable Carousel */}
-                  <div className="flex gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar -mx-1 px-1">
-                    {RELATABLE_ADDONS.map((addon) => (
-                      <div
-                        key={addon.id}
-                        className="w-36 sm:w-40 bg-white border border-stone-200 rounded-xl p-2 space-y-1.5 shrink-0 shadow-2xs hover:border-[#8B1E10]/40 transition-all flex flex-col justify-between"
-                      >
-                        <div>
-                          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-stone-100 border border-stone-100">
-                            <Image src={addon.image} alt={addon.name} fill className="object-cover" />
-                            <span className="absolute bottom-1 left-1 text-[8px] bg-stone-900/80 text-white px-1 rounded font-bold">
-                              {addon.size_label}
-                            </span>
-                          </div>
-                          <h4 className="text-xs font-bold text-stone-900 line-clamp-1 mt-1.5">{addon.name}</h4>
-                          <p className="text-[10px] text-stone-400 font-medium">{addon.tag}</p>
-                        </div>
-
-                        <div className="pt-1 border-t border-stone-100 flex items-center justify-between">
-                          <div>
-                            <span className="text-xs font-extrabold text-[#8B1E10]">{formatCurrency(addon.price)}</span>
-                            {addon.compare_at_price && (
-                              <span className="block text-[9px] text-stone-400 line-through">
-                                {formatCurrency(addon.compare_at_price)}
-                              </span>
-                            )}
-                          </div>
-                          <button
-                            onClick={() => handleQuickAdd(addon)}
-                            className="bg-[#8B1E10] hover:bg-[#72160B] text-white text-[10px] font-extrabold px-2 py-1 rounded-lg shadow-xs flex items-center gap-0.5 transition-colors"
-                          >
-                            <Plus className="w-3 h-3" /> Add
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </>
             )}
