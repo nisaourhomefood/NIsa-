@@ -46,7 +46,10 @@ export async function getShopifyProducts(options?: {
     tags: ['shopify_products'],
   });
 
-  if (errors || !data?.products?.nodes) {
+  if (errors) {
+    console.warn('[Shopify] getShopifyProducts returned partial errors (using any data received):', errors);
+  }
+  if (!data?.products?.nodes) {
     return [];
   }
 
@@ -66,7 +69,10 @@ export async function getShopifyProductBySlug(slug: string): Promise<ProductWith
     tags: [`shopify_product_${slug}`],
   });
 
-  if (errors || !data?.product) {
+  if (errors) {
+    console.warn('[Shopify] getShopifyProductBySlug returned partial errors (using any data received):', errors);
+  }
+  if (!data?.product) {
     return null;
   }
 
@@ -86,7 +92,10 @@ export async function getShopifyCollections(): Promise<Category[]> {
     tags: ['shopify_collections'],
   });
 
-  if (errors || !data?.collections?.nodes) {
+  if (errors) {
+    console.warn('[Shopify] getShopifyCollections returned partial errors (using any data received):', errors);
+  }
+  if (!data?.collections?.nodes) {
     return [];
   }
 
@@ -105,7 +114,10 @@ export async function getShopifyCollectionProducts(handle: string): Promise<Prod
     revalidate: 60,
   });
 
-  if (errors || !data?.collection?.products?.nodes) {
+  if (errors) {
+    console.warn('[Shopify] getShopifyCollectionProducts returned partial errors (using any data received):', errors);
+  }
+  if (!data?.collection?.products?.nodes) {
     return [];
   }
 

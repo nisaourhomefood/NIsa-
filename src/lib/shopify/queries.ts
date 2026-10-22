@@ -45,7 +45,6 @@ export const PRODUCT_FRAGMENT = `
         id
         title
         availableForSale
-        quantityAvailable
         sku
         price {
           amount
