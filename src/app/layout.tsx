@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { CartProvider } from '@/lib/store/cart-context';
 import { StorefrontWrapper } from '@/components/storefront-wrapper';
@@ -195,6 +196,7 @@ export default function RootLayout({
         <CartProvider>
           <StorefrontWrapper>{children}</StorefrontWrapper>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );
