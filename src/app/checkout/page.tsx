@@ -12,7 +12,6 @@ import { calculateShippingFee, ShippingEstimate } from '@/lib/utils/shipping';
 import { buildWhatsAppOrderMessage, getStoreWhatsAppLink } from '@/lib/utils/whatsapp-order';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { INITIAL_PRODUCTS } from '@/lib/data/mock-products';
 
 declare global {
   interface Window {
@@ -43,7 +42,6 @@ export default function CheckoutPage() {
     shippingFee: fallbackShippingFee,
     appliedDiscount,
     clearCart,
-    changeItemVariant,
   } = useCart();
 
   // 4-step wizard state
@@ -570,16 +568,6 @@ export default function CheckoutPage() {
             </h3>
             <div className="divide-y divide-stone-100 border rounded-xl overflow-hidden">
               {items.map((item) => {
-                const matchingProduct = INITIAL_PRODUCTS.find(
-                  (p) => p.id === item.product_id || p.slug === item.slug || p.name === item.name
-                );
-
-                const availableVariants = matchingProduct?.variants || [
-                  { id: `${item.product_id}-250`, size_label: '250g', price: item.price, compare_at_price: item.compare_at_price },
-                  { id: `${item.product_id}-500`, size_label: '500g', price: Math.round(item.price * 1.9), compare_at_price: Math.round((item.compare_at_price || item.price * 1.15) * 1.9) },
-                  { id: `${item.product_id}-1000`, size_label: '1kg', price: Math.round(item.price * 3.6), compare_at_price: Math.round((item.compare_at_price || item.price * 1.15) * 3.6) },
-                ];
-
                 return (
                   <div key={item.id} className="p-3 bg-white space-y-2">
                     <div className="flex items-center gap-3">
@@ -595,28 +583,11 @@ export default function CheckoutPage() {
                       </span>
                     </div>
 
-                    {/* Pack size switcher */}
                     <div className="flex items-center gap-1.5 pt-1">
                       <span className="text-[9px] font-bold text-stone-400 uppercase">Pack Size:</span>
-                      <div className="flex gap-1 flex-wrap">
-                        {availableVariants.map((v) => {
-                          const isSelected = item.variant_id === v.id || item.size_label.toLowerCase() === v.size_label.toLowerCase();
-                          return (
-                            <button
-                              key={v.id || v.size_label}
-                              type="button"
-                              onClick={() => changeItemVariant(item.variant_id, v as any)}
-                              className={`text-[9px] px-2 py-0.5 rounded-md font-bold transition-all border cursor-pointer ${
-                                isSelected
-                                  ? 'bg-[#8B1E10] text-white border-[#8B1E10]'
-                                  : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-[#8B1E10]/40'
-                              }`}
-                            >
-                              <span>{v.size_label}</span> ({formatCurrency(v.price)})
-                            </button>
-                          );
-                        })}
-                      </div>
+                      <span className="text-[9px] px-2 py-0.5 rounded-md font-bold bg-[#8B1E10] text-white">
+                        {item.size_label}
+                      </span>
                     </div>
                   </div>
                 );

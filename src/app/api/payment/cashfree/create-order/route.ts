@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { INITIAL_PRODUCTS } from '@/lib/data/mock-products';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { calculateShippingFee } from '@/lib/utils/shipping';
+import { getShopifyVariantPrices } from '@/lib/shopify/api';
 
 export async function POST(req: Request) {
   try {
@@ -11,15 +11,15 @@ export async function POST(req: Request) {
 
     // Security: Recalculate price on the server if items are provided to prevent client-side price tampering
     if (Array.isArray(items) && items.length > 0) {
+      const variantIds = items.map((item) => item.variant_id).filter(Boolean);
+      const realPrices = await getShopifyVariantPrices(variantIds);
+
       let calculatedSubtotal = 0;
 
       for (const item of items) {
-        let itemPrice = item.price;
-        // Lookup from catalog for security
-        const prod = INITIAL_PRODUCTS.find((p) => p.id === item.product_id);
-        const variant = prod?.variants?.find((v) => v.id === item.variant_id);
-        if (variant) {
-          itemPrice = variant.price;
+        const itemPrice = realPrices.get(item.variant_id) ?? item.price;
+        if (!itemPrice) {
+          return NextResponse.json({ error: `Could not verify price for item ${item.variant_id}` }, { status: 400 });
         }
         calculatedSubtotal += itemPrice * (item.quantity || 1);
       }

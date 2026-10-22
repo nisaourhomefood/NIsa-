@@ -1,10 +1,10 @@
 import { MetadataRoute } from 'next';
-import { INITIAL_PRODUCTS } from '@/lib/data/mock-products';
 import { INITIAL_COMBOS } from '@/lib/data/mock-combos';
+import { getShopifyProducts } from '@/lib/shopify/api';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisafoods.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
 
   // Static Storefront Routes
@@ -84,7 +84,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Dynamic Product Pages
-  const productRoutes: MetadataRoute.Sitemap = INITIAL_PRODUCTS.map((p) => ({
+  const products = await getShopifyProducts({ first: 250 });
+  const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
     url: `${BASE_URL}/products/${p.slug}`,
     lastModified: currentDate,
     changeFrequency: 'weekly',

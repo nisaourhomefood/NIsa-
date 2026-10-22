@@ -307,3 +307,17 @@ export const GET_CART_QUERY = `
     }
   }
 `;
+
+// Query real variant prices by ID (server-side price validation, prevents client tampering)
+export const GET_VARIANT_PRICES_QUERY = `
+  query GetVariantPrices($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on ProductVariant {
+        id
+        price {
+          amount
+        }
+      }
+    }
+  }
+`;

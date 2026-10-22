@@ -10,6 +10,7 @@ import {
   CART_LINES_REMOVE_MUTATION,
   CART_DISCOUNT_CODES_UPDATE_MUTATION,
   GET_CART_QUERY,
+  GET_VARIANT_PRICES_QUERY,
 } from './queries';
 import {
   ShopifyProduct,
@@ -256,4 +257,31 @@ export async function getShopifyCart(cartId: string): Promise<ShopifyCart | null
   }
 
   return data.cart;
+}
+
+// Fetch real variant prices by ID — used server-side to validate order totals against
+// what Shopify actually charges, instead of trusting a client-supplied price.
+export async function getShopifyVariantPrices(variantIds: string[]): Promise<Map<string, number>> {
+  const prices = new Map<string, number>();
+  if (!isShopifyConfigured() || variantIds.length === 0) return prices;
+
+  const { data, errors } = await shopifyFetch<{
+    nodes: ({ id: string; price: { amount: string } } | null)[];
+  }>({
+    query: GET_VARIANT_PRICES_QUERY,
+    variables: { ids: variantIds },
+    cache: 'no-store',
+  });
+
+  if (errors) {
+    console.warn('[Shopify] getShopifyVariantPrices returned partial errors:', errors);
+  }
+
+  for (const node of data?.nodes || []) {
+    if (node?.id && node.price?.amount) {
+      prices.set(node.id, parseFloat(node.price.amount));
+    }
+  }
+
+  return prices;
 }
