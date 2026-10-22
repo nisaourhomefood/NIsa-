@@ -1,19 +1,11 @@
-// WhatsApp shipment notifications for NISA via Meta's official WhatsApp Cloud API
+// WhatsApp order/shipment notifications for NISA via Meta's official WhatsApp Cloud API
 // (the same API most Shopify/D2C stores integrate with, directly or via a BSP like Interakt/AiSensy).
 // Docs: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages
 //
-// Requires a one-time setup in Meta Business Manager: a WhatsApp Business phone number
-// and one approved message template (e.g. "order_shipped" with 5 body variables — see below).
-// Until WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN are set, sends are skipped (logged only).
-
-export interface WhatsAppShipmentDetails {
-  customerName: string;
-  customerPhone: string;
-  orderNumber: string;
-  courierName: string;
-  awbCode: string;
-  trackingUrl: string;
-}
+// Requires a one-time setup in Meta Business Manager: a WhatsApp Business phone number,
+// and one approved message template per message type (see each function below for its
+// expected body variables). Until WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN are set,
+// sends are skipped (logged only) — nothing else breaks.
 
 export interface WhatsAppSendResult {
   success: boolean;
@@ -21,16 +13,23 @@ export interface WhatsAppSendResult {
   error?: string;
 }
 
-export async function sendWhatsAppShipmentUpdate(details: WhatsAppShipmentDetails): Promise<WhatsAppSendResult> {
+// Low-level sender: posts one template message to a customer's WhatsApp number.
+async function sendWhatsAppTemplate(
+  customerPhone: string,
+  templateNameEnvVar: string,
+  defaultTemplateName: string,
+  bodyParams: string[],
+  logLabel: string
+): Promise<WhatsAppSendResult> {
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
-  const templateName = process.env.WHATSAPP_TEMPLATE_NAME || 'order_shipped';
+  const templateName = process.env[templateNameEnvVar] || defaultTemplateName;
   const templateLang = process.env.WHATSAPP_TEMPLATE_LANG || 'en';
 
-  const cleanPhone = details.customerPhone.replace(/\D/g, '').slice(-10);
+  const cleanPhone = customerPhone.replace(/\D/g, '').slice(-10);
 
   if (!phoneNumberId || !accessToken) {
-    console.log(`[WhatsApp] Skipped for order ${details.orderNumber} — WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN not configured.`);
+    console.log(`[WhatsApp] Skipped ${logLabel} — WHATSAPP_PHONE_NUMBER_ID / WHATSAPP_ACCESS_TOKEN not configured.`);
     return { success: false, skipped: true };
   }
 
@@ -55,13 +54,7 @@ export async function sendWhatsAppShipmentUpdate(details: WhatsAppShipmentDetail
           components: [
             {
               type: 'body',
-              parameters: [
-                { type: 'text', text: details.customerName },
-                { type: 'text', text: details.orderNumber },
-                { type: 'text', text: details.courierName },
-                { type: 'text', text: details.awbCode },
-                { type: 'text', text: details.trackingUrl },
-              ],
+              parameters: bodyParams.map((text) => ({ type: 'text', text })),
             },
           ],
         },
@@ -71,13 +64,52 @@ export async function sendWhatsAppShipmentUpdate(details: WhatsAppShipmentDetail
     const data = await res.json();
 
     if (!res.ok) {
-      console.error('[WhatsApp] Send failed:', data);
+      console.error(`[WhatsApp] Send failed (${logLabel}):`, data);
       return { success: false, error: data?.error?.message || 'WhatsApp send failed' };
     }
 
     return { success: true };
   } catch (err) {
-    console.error('[WhatsApp] Send error:', err);
+    console.error(`[WhatsApp] Send error (${logLabel}):`, err);
     return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
+}
+
+export interface WhatsAppShipmentDetails {
+  customerName: string;
+  customerPhone: string;
+  orderNumber: string;
+  courierName: string;
+  awbCode: string;
+  trackingUrl: string;
+}
+
+// Template "order_shipped" expected body variables: name, order number, courier, AWB, tracking link
+export async function sendWhatsAppShipmentUpdate(details: WhatsAppShipmentDetails): Promise<WhatsAppSendResult> {
+  return sendWhatsAppTemplate(
+    details.customerPhone,
+    'WHATSAPP_TEMPLATE_NAME',
+    'order_shipped',
+    [details.customerName, details.orderNumber, details.courierName, details.awbCode, details.trackingUrl],
+    `shipment update for order ${details.orderNumber}`
+  );
+}
+
+export interface WhatsAppOrderConfirmationDetails {
+  customerName: string;
+  customerPhone: string;
+  orderNumber: string;
+  totalAmount: string;
+  itemSummary: string;
+}
+
+// Template "order_confirmed" expected body variables: name, order number, item summary, total paid
+export async function sendWhatsAppOrderConfirmation(details: WhatsAppOrderConfirmationDetails): Promise<WhatsAppSendResult> {
+  return sendWhatsAppTemplate(
+    details.customerPhone,
+    'WHATSAPP_ORDER_CONFIRMED_TEMPLATE_NAME',
+    'order_confirmed',
+    [details.customerName, details.orderNumber, details.itemSummary, details.totalAmount],
+    `order confirmation for order ${details.orderNumber}`
+  );
 }
