@@ -97,11 +97,11 @@ export function Navbar() {
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Account / Admin Link */}
+            {/* My Account */}
             <Link
-              href="/admin"
+              href="/account"
               className="p-2 rounded-lg text-stone-700 hover:text-[#8B1E10] hover:bg-[#F3ECE2] transition-colors"
-              title="Account / Admin Portal"
+              title="My Account & Orders"
             >
               <User className="w-5 h-5" />
             </Link>
@@ -166,11 +166,11 @@ export function Navbar() {
             ))}
             <div className="pt-2 flex items-center justify-between">
               <Link
-                href="/admin"
+                href="/account"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-xs text-[#8B1E10] underline font-bold"
               >
-                Admin & Account Access
+                My Account & Orders
               </Link>
             </div>
           </div>

@@ -48,9 +48,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'SEO & Meta Tags', href: '/admin/seo', icon: Globe },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      localStorage.removeItem('nisa_admin_session');
+      await fetch('/api/admin/logout', { method: 'POST' });
     } catch (e) {
       console.error(e);
     }

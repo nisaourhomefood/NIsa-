@@ -9,35 +9,36 @@ import { Button } from '@/components/ui/button';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@nisafoods.com');
-  const [password, setPassword] = useState('NisaAdmin2026!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    setTimeout(() => {
-      if (email === 'admin@nisafoods.com' && password === 'NisaAdmin2026!') {
-        try {
-          localStorage.setItem('nisa_admin_session', JSON.stringify({
-            role: 'superadmin',
-            email,
-            token: 'nisa_session_token_xyz987',
-            loginTime: new Date().toISOString(),
-          }));
-        } catch (err) {
-          console.error(err);
-        }
-        setLoading(false);
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.ok) {
         router.push('/admin');
-      } else {
-        setLoading(false);
-        setError('Invalid admin credentials. Please check email and password.');
+        return;
       }
-    }, 800);
+
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || 'Invalid admin credentials. Please check email and password.');
+    } catch (err) {
+      console.error(err);
+      setError('Could not reach the server. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
