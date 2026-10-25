@@ -45,6 +45,7 @@ export default function ProductDetailPage() {
 
   const [product, setProduct] = useState<ProductWithVariants | null>(null);
   const [loading, setLoading] = useState(true);
+  const [relatedProducts, setRelatedProducts] = useState<ProductWithVariants[]>([]);
 
   useEffect(() => {
     fetch(`/api/products?slug=${slug}`)
@@ -57,6 +58,14 @@ export default function ProductDetailPage() {
       .catch((err) => console.error('Error loading product by slug:', err))
       .finally(() => setLoading(false));
   }, [slug]);
+
+  useEffect(() => {
+    if (!product?.id) return;
+    fetch(`/api/products?recommendationsFor=${encodeURIComponent(product.id)}`)
+      .then((res) => res.json())
+      .then((data) => setRelatedProducts(Array.isArray(data) ? data : []))
+      .catch((err) => console.error('Error loading related products:', err));
+  }, [product?.id]);
 
   const { addItem, proceedToShopifyCheckout, isShopifyCheckoutLoading } = useCart();
 
@@ -126,9 +135,6 @@ export default function ProductDetailPage() {
   const discountPercent = selectedVariant.compare_at_price
     ? calculateDiscountPercentage(selectedVariant.compare_at_price, selectedVariant.price)
     : 0;
-
-  // Related products: populated once a real related-products fetch is wired up
-  const relatedProducts: ProductWithVariants[] = [];
 
   const handleAddToCart = () => {
     addItem(product, selectedVariant, quantity);
@@ -829,16 +835,18 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Related Products */}
-      <div className="space-y-4">
-        <h3 className="text-xl sm:text-2xl font-black text-stone-900">
-          Complete Your Andhra Meal
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {relatedProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+      {relatedProducts.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-xl sm:text-2xl font-black text-stone-900">
+            Complete Your Andhra Meal
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );

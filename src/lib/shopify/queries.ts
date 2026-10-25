@@ -183,6 +183,16 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+// Shopify's own recommendation engine — "customers who viewed this also viewed/bought"
+export const GET_PRODUCT_RECOMMENDATIONS_QUERY = `
+  ${PRODUCT_FRAGMENT}
+  query GetProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      ...ProductDetails
+    }
+  }
+`;
+
 // Query collections
 export const GET_COLLECTIONS_QUERY = `
   query GetCollections($first: Int = 20) {

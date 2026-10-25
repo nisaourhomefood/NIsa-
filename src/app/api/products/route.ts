@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getShopifyProducts, getShopifyProductBySlug } from '@/lib/shopify/api';
+import { getShopifyProducts, getShopifyProductBySlug, getShopifyProductRecommendations } from '@/lib/shopify/api';
 
 // GET /api/products — fetch products from Shopify only
 export async function GET(req: Request) {
@@ -9,10 +9,16 @@ export async function GET(req: Request) {
   const featured = searchParams.get('featured');
   const bestseller = searchParams.get('bestseller');
   const sort = searchParams.get('sort') || 'bestseller';
+  const recommendationsFor = searchParams.get('recommendationsFor');
 
   if (slug) {
     const shopifyProduct = await getShopifyProductBySlug(slug);
     return NextResponse.json(shopifyProduct);
+  }
+
+  if (recommendationsFor) {
+    const recommendations = await getShopifyProductRecommendations(recommendationsFor);
+    return NextResponse.json(recommendations);
   }
 
   let products = await getShopifyProducts({

@@ -11,6 +11,7 @@ import {
   CART_DISCOUNT_CODES_UPDATE_MUTATION,
   GET_CART_QUERY,
   GET_VARIANT_PRICES_QUERY,
+  GET_PRODUCT_RECOMMENDATIONS_QUERY,
 } from './queries';
 import {
   ShopifyProduct,
@@ -78,6 +79,29 @@ export async function getShopifyProductBySlug(slug: string): Promise<ProductWith
   }
 
   return normalizeShopifyProduct(data.product);
+}
+
+// Fetch Shopify's own recommended products for a given product ("customers also bought")
+export async function getShopifyProductRecommendations(productId: string): Promise<ProductWithVariants[]> {
+  if (!isShopifyConfigured()) return [];
+
+  const { data, errors } = await shopifyFetch<{
+    productRecommendations: ShopifyProduct[] | null;
+  }>({
+    query: GET_PRODUCT_RECOMMENDATIONS_QUERY,
+    variables: { productId },
+    revalidate: 60,
+    tags: ['shopify_products'],
+  });
+
+  if (errors) {
+    console.warn('[Shopify] getShopifyProductRecommendations returned partial errors (using any data received):', errors);
+  }
+  if (!data?.productRecommendations) {
+    return [];
+  }
+
+  return data.productRecommendations.map(normalizeShopifyProduct);
 }
 
 // Fetch collections
