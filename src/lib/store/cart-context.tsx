@@ -2,9 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { CartItem, ProductWithVariants, ProductVariant, Discount } from '@/types/database.types';
-import { INITIAL_DISCOUNTS } from '@/lib/data/mock-products';
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/utils/shipping';
 
-const FREE_SHIPPING_THRESHOLD = 999;
 const STANDARD_SHIPPING_FEE = 79;
 const LOCAL_STORAGE_KEY = 'nisa_cart_v1';
 const SHOPIFY_CART_ID_KEY = 'nisa_shopify_cart_id';
@@ -26,7 +25,7 @@ interface CartContextType {
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
   appliedDiscount: Discount | null;
-  applyDiscountCode: (code: string) => { success: boolean; message: string };
+  applyDiscountCode: (code: string) => Promise<{ success: boolean; message: string }>;
   removeDiscountCode: () => void;
   subtotal: number;
   discountAmount: number;
@@ -264,34 +263,95 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
-  const applyDiscountCode = (code: string) => {
+  // Validates coupon codes against the real Shopify cart (not a local mock list) so the
+  // discount shown here always matches what Shopify will actually charge at checkout.
+  const applyDiscountCode = async (code: string): Promise<{ success: boolean; message: string }> => {
     const cleanCode = code.trim().toUpperCase();
-    const found = INITIAL_DISCOUNTS.find(
-      (d) => d.code.toUpperCase() === cleanCode && d.active
-    );
+    if (!cleanCode) return { success: false, message: 'Enter a coupon code' };
+    if (items.length === 0) return { success: false, message: 'Your cart is empty' };
 
-    if (!found) {
-      return { success: false, message: 'Invalid or expired coupon code' };
+    try {
+      let cartId = shopifyCartId;
+
+      if (!cartId) {
+        const lines = items.map((item) => ({
+          merchandiseId: formatShopifyVariantId(item.variant_id),
+          quantity: item.quantity,
+        }));
+        const createRes = await fetch('/api/shopify/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'create', lines }),
+        });
+        const createData = await createRes.json();
+        cartId = createData?.cart?.id || null;
+        if (cartId && createData.cart.checkoutUrl) {
+          setShopifyCartId(cartId);
+          setShopifyCheckoutUrl(createData.cart.checkoutUrl);
+          try {
+            localStorage.setItem(SHOPIFY_CART_ID_KEY, cartId);
+            localStorage.setItem(SHOPIFY_CHECKOUT_URL_KEY, createData.cart.checkoutUrl);
+          } catch {}
+        }
+      }
+
+      if (!cartId) {
+        return { success: false, message: 'Could not verify coupon right now. Please try again.' };
+      }
+
+      const res = await fetch('/api/shopify/cart', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'discount', cartId, discountCodes: [cleanCode] }),
+      });
+      const data = await res.json();
+      const cart = data?.cart;
+      const matched = cart?.discountCodes?.find(
+        (d: { code: string; applicable: boolean }) => d.code?.toUpperCase() === cleanCode
+      );
+
+      if (!matched?.applicable) {
+        // Clear the rejected code from the live cart so it doesn't linger into checkout
+        fetch('/api/shopify/cart', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'discount', cartId, discountCodes: [] }),
+        }).catch(() => {});
+        return { success: false, message: 'Invalid or expired coupon code' };
+      }
+
+      const realDiscountAmount = Math.max(
+        0,
+        Math.round(parseFloat(cart.cost.subtotalAmount.amount) - parseFloat(cart.cost.totalAmount.amount))
+      );
+
+      setAppliedDiscount({
+        id: cleanCode,
+        code: cleanCode,
+        discount_type: 'flat',
+        value: realDiscountAmount,
+        min_order_amount: 0,
+        active: true,
+        valid_from: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      });
+
+      return { success: true, message: `Coupon '${cleanCode}' applied successfully!` };
+    } catch (err) {
+      console.warn('[Coupon] Failed to validate coupon via Shopify:', err);
+      return { success: false, message: 'Could not verify coupon right now. Please try again.' };
     }
-
-    const currentSubtotal = items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-
-    if (currentSubtotal < found.min_order_amount) {
-      return {
-        success: false,
-        message: `Add items worth ₹${found.min_order_amount - currentSubtotal} more to apply code ${found.code}`,
-      };
-    }
-
-    setAppliedDiscount(found);
-    return { success: true, message: `Coupon '${found.code}' applied successfully!` };
   };
 
   const removeDiscountCode = () => {
     setAppliedDiscount(null);
+    if (shopifyCartId) {
+      fetch('/api/shopify/cart', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'discount', cartId: shopifyCartId, discountCodes: [] }),
+      }).catch(() => {});
+    }
   };
 
   const subtotal = useMemo(() => {

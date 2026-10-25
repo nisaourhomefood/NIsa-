@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   Package, Plus, Edit, Trash2, RefreshCw, X, Check,
-  Star, TrendingUp, Eye, EyeOff, ImagePlus, Info
+  Star, TrendingUp, Eye, EyeOff, ImagePlus, Info, AlertTriangle, ExternalLink
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { INITIAL_PRODUCTS, INITIAL_CATEGORIES } from '@/lib/data/mock-products';
@@ -420,6 +420,25 @@ export default function AdminProductsPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Disconnected-from-live-store warning */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4">
+        <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 font-medium">
+          <strong className="font-extrabold">This page is disconnected from your live store.</strong> Your storefront now
+          pulls every product, price, and stock count directly from Shopify — editing anything here has no effect on
+          what customers see. Manage your real catalogue in{' '}
+          <a
+            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || ''}/admin/products`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-extrabold underline inline-flex items-center gap-1"
+          >
+            Shopify Admin <ExternalLink className="w-3 h-3" />
+          </a>
+          .
+        </p>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-stone-200 pb-4 sm:pb-6">
         <div>
@@ -427,7 +446,7 @@ export default function AdminProductsPage() {
             Products & Variants ({products.length})
           </h1>
           <p className="text-[11px] sm:text-xs text-stone-500 font-medium mt-0.5">
-            Manage your real product catalogue, prices (MRP & selling price), image URLs, and stock.
+            Legacy Supabase catalogue — kept for historical reference only.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">

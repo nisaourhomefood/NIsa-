@@ -10,7 +10,6 @@ import {
   Minus,
   Trash2,
   ArrowRight,
-  Sparkles,
   Tag,
   ShieldCheck,
   Truck,
@@ -18,7 +17,6 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
-  Gift,
   MessageSquare,
 } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
@@ -45,19 +43,22 @@ export function CartDrawer() {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const [couponSuccess, setCouponSuccess] = useState('');
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   if (!isCartOpen) return null;
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
+  const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     setCouponError('');
     setCouponSuccess('');
     if (!couponInput) return;
 
-    const res = applyDiscountCode(couponInput);
+    setIsApplyingCoupon(true);
+    const res = await applyDiscountCode(couponInput);
+    setIsApplyingCoupon(false);
     if (res.success) {
       setCouponSuccess(res.message);
       setCouponInput('');
@@ -66,30 +67,16 @@ export function CartDrawer() {
     }
   };
 
-  // 3-Tier Dynamic Milestone Rewards
-  // Tier 1: ₹999 -> Free 100g Podi Goodie 🎁
-  // Tier 2: ₹1,499 -> ₹99 OFF Coupon + Free 100g Podi 🏷️
-  // Tier 3: ₹2,499 -> Free Express Delivery + 2x 100g Free Podis 🚚
-  const TIER_1 = 999;
-  const TIER_2 = 1499;
-  const TIER_3 = 2499;
-
-  const getRewardProgress = () => {
-    if (subtotal >= TIER_3) return 100;
-    return Math.min(100, Math.round((subtotal / TIER_3) * 100));
+  const getFreeShippingProgress = () => {
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) return 100;
+    return Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
   };
 
-  const getNextRewardText = () => {
-    if (subtotal < TIER_1) {
-      return `Add ${formatCurrency(TIER_1 - subtotal)} more to unlock a FREE 100g Podi Sample 🎁`;
+  const getFreeShippingText = () => {
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+      return `🎉 You've unlocked FREE shipping!`;
     }
-    if (subtotal < TIER_2) {
-      return `Add ${formatCurrency(TIER_2 - subtotal)} more to get ₹99 OFF with code FIRSTORDER99 🏷️`;
-    }
-    if (subtotal < TIER_3) {
-      return `Add ${formatCurrency(TIER_3 - subtotal)} more for FREE Delivery + 2x 100g Free Podis 🚚`;
-    }
-    return `🎉 VIP Unlocked: FREE Express Delivery + 2x 100g Free Podis Goodies!`;
+    return `Add ${formatCurrency(FREE_SHIPPING_THRESHOLD - subtotal)} more for FREE shipping`;
   };
 
   const shippingEst = calculateShippingFee('522201', subtotal);
@@ -123,56 +110,23 @@ export function CartDrawer() {
             </button>
           </div>
 
-          {/* Top Ticker Bar */}
-          <div className="bg-[#1C0A08] text-amber-200 px-3 py-1.5 text-center text-[11px] font-extrabold tracking-wide flex items-center justify-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-            <span>🎁 FREE 100g Podi Above ₹999 | ₹99 OFF Above ₹1,499 (CODE: <strong className="text-white underline">FIRSTORDER99</strong>)</span>
-          </div>
-
-          {/* Interactive Multi-Tier Milestone Progress Bar */}
+          {/* Free Shipping Progress Bar */}
           <div className="bg-amber-50/90 border-b border-amber-200/80 p-3 sm:p-4 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-extrabold text-[#8B1E10] text-[11px] sm:text-xs leading-tight">
-                {getNextRewardText()}
+              <span className="font-extrabold text-[#8B1E10] text-[11px] sm:text-xs leading-tight flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 shrink-0" />
+                {getFreeShippingText()}
               </span>
               <span className="text-[10px] font-bold text-stone-500 font-mono shrink-0 ml-2">
-                {formatCurrency(subtotal)} / {formatCurrency(TIER_3)}
+                {formatCurrency(subtotal)} / {formatCurrency(FREE_SHIPPING_THRESHOLD)}
               </span>
             </div>
 
-            {/* Progress Bar Track */}
             <div className="relative w-full h-2.5 bg-amber-200/70 rounded-full overflow-hidden shadow-inner">
               <div
                 className="h-full bg-gradient-to-r from-[#8B1E10] via-amber-600 to-emerald-600 transition-all duration-500 rounded-full"
-                style={{ width: `${getRewardProgress()}%` }}
+                style={{ width: `${getFreeShippingProgress()}%` }}
               />
-            </div>
-
-            {/* 3 Milestone Checkpoints */}
-            <div className="grid grid-cols-3 text-center text-[10px] font-bold pt-1 gap-1">
-              <div className={`flex flex-col items-center gap-0.5 ${subtotal >= TIER_1 ? 'text-emerald-800' : 'text-stone-500'}`}>
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${subtotal >= TIER_1 ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-600'}`}>
-                  {subtotal >= TIER_1 ? '✓' : '🎁'}
-                </span>
-                <span className="font-extrabold">₹999</span>
-                <span className="text-[9px] text-stone-500 font-medium">100g Free Podi</span>
-              </div>
-
-              <div className={`flex flex-col items-center gap-0.5 ${subtotal >= TIER_2 ? 'text-emerald-800' : 'text-stone-500'}`}>
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${subtotal >= TIER_2 ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-600'}`}>
-                  {subtotal >= TIER_2 ? '✓' : '🏷️'}
-                </span>
-                <span className="font-extrabold">₹1,499</span>
-                <span className="text-[9px] text-stone-500 font-medium">₹99 OFF + Podi</span>
-              </div>
-
-              <div className={`flex flex-col items-center gap-0.5 ${subtotal >= TIER_3 ? 'text-emerald-800' : 'text-stone-500'}`}>
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${subtotal >= TIER_3 ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-600'}`}>
-                  {subtotal >= TIER_3 ? '✓' : '🚚'}
-                </span>
-                <span className="font-extrabold">₹2,499</span>
-                <span className="text-[9px] text-stone-500 font-medium">Free Delivery + 2 Podis</span>
-              </div>
             </div>
           </div>
 
@@ -271,62 +225,13 @@ export function CartDrawer() {
                   })}
                 </div>
 
-                {/* 🎁 Unlocked Free Goodies Visual Representation */}
-                {subtotal >= TIER_3 ? (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 space-y-2 shadow-2xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-emerald-950 flex items-center gap-1.5">
-                        <Gift className="w-4 h-4 text-emerald-700" />
-                        <span>2x FREE 100g Podis + Free Express Delivery Unlocked!</span>
-                      </span>
-                      <span className="text-[9px] font-black uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full">
-                        VIP GIFT
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-emerald-100">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-stone-200">
-                          <Image src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400&auto=format&fit=crop" alt="100g Gongura Podi" fill className="object-cover" />
-                        </div>
-                        <div className="min-w-0">
-                          <span className="text-[10px] font-bold text-stone-900 block truncate">100g Gongura Podi</span>
-                          <span className="text-[10px] text-emerald-700 font-extrabold">₹0 <span className="line-through text-stone-400 text-[9px]">₹99</span></span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-emerald-100">
-                        <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-stone-200">
-                          <Image src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?q=80&w=400&auto=format&fit=crop" alt="100g Nallakaram Podi" fill className="object-cover" />
-                        </div>
-                        <div className="min-w-0">
-                          <span className="text-[10px] font-bold text-stone-900 block truncate">100g Karam Podi</span>
-                          <span className="text-[10px] text-emerald-700 font-extrabold">₹0 <span className="line-through text-stone-400 text-[9px]">₹99</span></span>
-                        </div>
-                      </div>
-                    </div>
+                {/* Free Shipping Unlocked Confirmation */}
+                {subtotal >= FREE_SHIPPING_THRESHOLD && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center gap-2 shadow-2xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span className="text-xs font-bold text-emerald-900">Free shipping unlocked on this order!</span>
                   </div>
-                ) : subtotal >= TIER_1 ? (
-                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-2 shadow-2xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-amber-950 flex items-center gap-1.5">
-                        <Gift className="w-4 h-4 text-[#8B1E10]" />
-                        <span>FREE 100g Podi Sample Goodie Unlocked!</span>
-                      </span>
-                      <span className="text-[9px] font-black uppercase bg-[#8B1E10] text-white px-2 py-0.5 rounded-full">
-                        FREE GIFT
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5 bg-white p-2 rounded-xl border border-amber-100">
-                      <div className="relative w-11 h-11 rounded-lg overflow-hidden shrink-0 border border-stone-200">
-                        <Image src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?q=80&w=400&auto=format&fit=crop" alt="100g Tenali Karam Podi" fill className="object-cover" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="text-xs font-bold text-stone-900 block truncate">100g Tenali Nallakaram Podi</span>
-                        <p className="text-[10px] text-stone-500">Hand-ground in stone pestle with garlic & wood-pressed oil</p>
-                      </div>
-                      <span className="text-xs text-emerald-700 font-black shrink-0">₹0 <span className="line-through text-stone-400 text-[10px] font-normal">₹99</span></span>
-                    </div>
-                  </div>
-                ) : null}
+                )}
 
                 {/* Promo Code Input */}
                 <div className="pt-2 border-t border-stone-100">
@@ -354,16 +259,18 @@ export function CartDrawer() {
                     <form onSubmit={handleApplyCoupon} className="flex gap-2">
                       <input
                         type="text"
-                        placeholder="Enter Coupon (e.g. FIRSTORDER99)"
+                        placeholder="Enter coupon code"
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                        className="flex-1 bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl px-3 py-2 text-xs font-bold uppercase text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#8B1E10]"
+                        disabled={isApplyingCoupon}
+                        className="flex-1 bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl px-3 py-2 text-xs font-bold uppercase text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-[#8B1E10] disabled:opacity-60"
                       />
                       <button
                         type="submit"
-                        className="bg-[#8B1E10] hover:bg-[#72160B] text-white text-xs font-extrabold px-4 py-2 rounded-xl transition-colors shadow-xs"
+                        disabled={isApplyingCoupon}
+                        className="bg-[#8B1E10] hover:bg-[#72160B] text-white text-xs font-extrabold px-4 py-2 rounded-xl transition-colors shadow-xs disabled:opacity-60"
                       >
-                        Apply
+                        {isApplyingCoupon ? 'Checking...' : 'Apply'}
                       </button>
                     </form>
                   )}

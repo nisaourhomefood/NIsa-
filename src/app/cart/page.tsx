@@ -27,14 +27,17 @@ export default function CartPage() {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const [couponSuccess, setCouponSuccess] = useState('');
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
+  const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     setCouponError('');
     setCouponSuccess('');
     if (!couponInput) return;
 
-    const res = applyDiscountCode(couponInput);
+    setIsApplyingCoupon(true);
+    const res = await applyDiscountCode(couponInput);
+    setIsApplyingCoupon(false);
     if (res.success) {
       setCouponSuccess(res.message);
       setCouponInput('');
@@ -157,13 +160,15 @@ export default function CartPage() {
                     placeholder="Coupon Code"
                     value={couponInput}
                     onChange={(e) => setCouponInput(e.target.value)}
-                    className="flex-1 bg-white border border-[#D8CCA8] rounded-xl px-3.5 py-2.5 text-xs text-stone-900 uppercase focus:outline-none focus:border-[#8B1E10] focus:ring-2 focus:ring-[#8B1E10]/20 transition-colors"
+                    disabled={isApplyingCoupon}
+                    className="flex-1 bg-white border border-[#D8CCA8] rounded-xl px-3.5 py-2.5 text-xs text-stone-900 uppercase focus:outline-none focus:border-[#8B1E10] focus:ring-2 focus:ring-[#8B1E10]/20 transition-colors disabled:opacity-60"
                   />
                   <button
                     type="submit"
-                    className="bg-stone-800 hover:bg-stone-900 text-white text-xs font-bold px-4 py-2 rounded-xl"
+                    disabled={isApplyingCoupon}
+                    className="bg-stone-800 hover:bg-stone-900 text-white text-xs font-bold px-4 py-2 rounded-xl disabled:opacity-60"
                   >
-                    Apply
+                    {isApplyingCoupon ? 'Checking...' : 'Apply'}
                   </button>
                 </form>
               )}

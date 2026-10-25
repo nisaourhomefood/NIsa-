@@ -342,7 +342,7 @@ export default function ProductDetailPage() {
               )}
             </div>
             <p className="text-[11px] text-stone-600 font-medium">
-              Tax included • 🎁 <strong>FREE 100g Podi</strong> on orders over ₹999 • <strong>FREE Express Delivery</strong> on orders over ₹2,499.
+              Tax included • <strong>FREE Shipping</strong> on orders over ₹2,499.
             </p>
           </div>
 

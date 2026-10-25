@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Lock, ArrowLeft, CreditCard, ShieldCheck, CheckCircle2, AlertCircle, Truck, MessageSquare, Sparkles } from 'lucide-react';
+import { Lock, ArrowLeft, CreditCard, ShieldCheck, CheckCircle2, AlertCircle, Truck, MessageSquare } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency, generateOrderNumber, getEstimatedDeliveryDate } from '@/lib/utils';
 import { addressSchema, AddressFormData } from '@/lib/validations/schemas';
@@ -594,54 +594,13 @@ export default function CheckoutPage() {
               })}
             </div>
 
-            {/* 🎁 Unlocked Free Goodies Card */}
-            {subtotal >= 2499 ? (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-2 mt-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-emerald-950 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>2x FREE 100g Podis + Free Express Delivery</span>
-                  </span>
-                  <span className="text-[9px] font-black uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full">
-                    VIP GIFT
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-emerald-100">
-                    <div className="relative w-9 h-9 rounded-md overflow-hidden shrink-0 border border-stone-200">
-                      <Image src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400&auto=format&fit=crop" alt="100g Gongura Podi" fill className="object-cover" />
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-[10px] font-bold text-stone-900 block truncate">100g Gongura Podi</span>
-                      <span className="text-[10px] text-emerald-700 font-extrabold">₹0 <span className="line-through text-stone-400 text-[9px]">₹99</span></span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white p-2 rounded-lg border border-emerald-100">
-                    <div className="relative w-9 h-9 rounded-md overflow-hidden shrink-0 border border-stone-200">
-                      <Image src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?q=80&w=400&auto=format&fit=crop" alt="100g Nallakaram Podi" fill className="object-cover" />
-                    </div>
-                    <div className="min-w-0">
-                      <span className="text-[10px] font-bold text-stone-900 block truncate">100g Karam Podi</span>
-                      <span className="text-[10px] text-emerald-700 font-extrabold">₹0 <span className="line-through text-stone-400 text-[9px]">₹99</span></span>
-                    </div>
-                  </div>
-                </div>
+            {/* Free Shipping Unlocked Confirmation */}
+            {subtotal >= 2499 && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 flex items-center gap-2 mt-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                <span className="text-xs font-bold text-emerald-900">Free shipping unlocked on this order!</span>
               </div>
-            ) : subtotal >= 999 ? (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 flex items-center gap-2.5 mt-2">
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-stone-200 bg-white">
-                  <Image src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?q=80&w=400&auto=format&fit=crop" alt="100g Tenali Karam Podi" fill className="object-cover" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] font-black text-amber-950">FREE 100g Tenali Karam Podi</span>
-                    <span className="text-[8px] font-black bg-[#8B1E10] text-white px-1.5 py-0.2 rounded-full">GIFT</span>
-                  </div>
-                  <p className="text-[9px] text-stone-500">Tenali authentic stone-pestle recipe</p>
-                </div>
-                <span className="text-xs text-emerald-700 font-black shrink-0">₹0 <span className="line-through text-stone-400 text-[9px]">₹99</span></span>
-              </div>
-            ) : null}
+            )}
           </div>
 
           {/* Bill Calculation */}

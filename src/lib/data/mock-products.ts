@@ -1,4 +1,4 @@
-import { Category, ProductWithVariants, Review, Discount } from '@/types/database.types';
+import { Category, ProductWithVariants, Review } from '@/types/database.types';
 
 export const INITIAL_CATEGORIES: Category[] = [
   {
@@ -731,38 +731,5 @@ export const INITIAL_REVIEWS: Review[] = [
     is_verified_purchase: true,
     is_approved: true,
     created_at: '2026-08-16T11:20:00Z',
-  },
-];
-
-export const INITIAL_DISCOUNTS: Discount[] = [
-  {
-    id: 'disc-firstorder99',
-    code: 'FIRSTORDER99',
-    discount_type: 'flat',
-    value: 99,
-    min_order_amount: 1499,
-    active: true,
-    valid_from: new Date().toISOString(),
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'disc-welcome10',
-    code: 'MANAINTI10',
-    discount_type: 'percentage',
-    value: 10,
-    min_order_amount: 499,
-    active: true,
-    valid_from: new Date().toISOString(),
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'disc-flat100',
-    code: 'NISA100',
-    discount_type: 'flat',
-    value: 100,
-    min_order_amount: 999,
-    active: true,
-    valid_from: new Date().toISOString(),
-    created_at: new Date().toISOString(),
   },
 ];

@@ -157,7 +157,8 @@ export default function AdminOrdersPage() {
             Order Fulfillment ({orders.length})
           </h1>
           <p className="text-[11px] sm:text-xs text-stone-500 font-medium mt-0.5">
-            Live orders from Supabase. Book courier pickups & update delivery tracking.
+            WhatsApp UPI checkout orders only. Orders paid via the main Shopify checkout button
+            appear in Shopify Admin → Orders, not here.
           </p>
         </div>
         <button

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Tag, Plus, Edit, X, RefreshCw } from 'lucide-react';
+import { Tag, Plus, Edit, X, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -82,12 +82,31 @@ export default function AdminDiscountsPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8 min-h-screen">
+      {/* Disconnected-from-live-store warning */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4">
+        <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 font-medium">
+          <strong className="font-extrabold">This page is disconnected from your live checkout.</strong> Shopify
+          validates every coupon code at checkout now — creating a discount rule here has no effect on what
+          customers can actually redeem. Create real, working discount codes in{' '}
+          <a
+            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || ''}/admin/discounts`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-extrabold underline inline-flex items-center gap-1"
+          >
+            Shopify Admin <ExternalLink className="w-3 h-3" />
+          </a>
+          .
+        </p>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-stone-200 pb-4 sm:pb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900">Discounts & Referral Rules</h1>
           <p className="text-[11px] sm:text-xs text-stone-600 font-medium mt-0.5">
-            Control promo codes, first-order discounts, and seasonal offers.
+            Legacy Supabase discount rules — kept for historical reference only.
           </p>
         </div>
         <div className="w-full sm:w-auto">

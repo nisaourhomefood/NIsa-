@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Users, RefreshCw, Trash2, ShieldCheck, Mail, Phone, MapPin } from 'lucide-react';
+import { Users, RefreshCw, Trash2, ShieldCheck, Mail, Phone, MapPin, AlertTriangle, ExternalLink } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -68,6 +68,25 @@ export default function AdminCustomersPage() {
 
   return (
     <div className="space-y-4 sm:space-y-6 min-h-screen">
+      {/* Disconnected-from-live-store warning */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4">
+        <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 font-medium">
+          <strong className="font-extrabold">This only tracks the WhatsApp UPI checkout, not Shopify orders.</strong>{' '}
+          Customers who pay via the main &quot;Proceed to Checkout&quot; button never reach this list — they're recorded
+          in Shopify instead. For your real, complete customer list, use{' '}
+          <a
+            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || ''}/admin/customers`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-extrabold underline inline-flex items-center gap-1"
+          >
+            Shopify Admin <ExternalLink className="w-3 h-3" />
+          </a>
+          .
+        </p>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-stone-200 pb-3 sm:pb-5">
         <div>
@@ -75,7 +94,7 @@ export default function AdminCustomersPage() {
             Customer CRM ({customers.length})
           </h1>
           <p className="text-[11px] sm:text-xs text-stone-500 font-medium mt-0.5">
-            Real customers who reached checkout via WhatsApp or Online Payment.
+            Customers who reached checkout via the WhatsApp UPI flow only.
           </p>
         </div>
 

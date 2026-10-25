@@ -58,7 +58,6 @@ export function buildWhatsAppOrderMessage(details: WhatsAppOrderDetails): string
     itemLines,
     '',
     `*Subtotal:* ${formatCurrency(details.subtotal)}`,
-    details.subtotal >= 2499 ? '🎁 *Unlocked Free Goodies:* 2x 100g Podis (Gongura & Karam Podi) + FREE Express Shipping' : details.subtotal >= 999 ? '🎁 *Unlocked Free Goodie:* 100g Authentic Tenali Karam Podi Sample' : null,
     details.discountAmount > 0 ? `*Coupon Savings:* -${formatCurrency(details.discountAmount)}` : null,
     `*Delivery (${details.shippingZoneLabel}):* ${details.shippingFee === 0 ? 'FREE' : formatCurrency(details.shippingFee)}`,
     `*Total Payable:* ${formatCurrency(details.totalAmount)}`,
