@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface Banner {
+interface TextBanner {
   id: string;
   title: string;
   subtitle: string;
@@ -15,7 +15,14 @@ interface Banner {
   bg_color: string;
 }
 
-const DEFAULT_BANNERS: Banner[] = [
+interface GraphicBanner {
+  id: string;
+  title: string;
+  image_url: string;
+  cta_link: string;
+}
+
+const DEFAULT_BANNERS: TextBanner[] = [
   {
     id: 'b1',
     title: 'The Taste of Andhra, Just Like Home.',
@@ -46,9 +53,21 @@ const DEFAULT_BANNERS: Banner[] = [
 ];
 
 export function BannerCarousel() {
+  const [graphicBanners, setGraphicBanners] = useState<GraphicBanner[]>([]);
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const banners = DEFAULT_BANNERS;
+
+  useEffect(() => {
+    fetch('/api/banners')
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d) && d.length > 0) setGraphicBanners(d);
+      })
+      .catch(() => null);
+  }, []);
+
+  const usingGraphicBanners = graphicBanners.length > 0;
+  const slideCount = usingGraphicBanners ? graphicBanners.length : DEFAULT_BANNERS.length;
 
   const goTo = useCallback(
     (idx: number) => {
@@ -61,10 +80,10 @@ export function BannerCarousel() {
   );
 
   const next = useCallback(() => {
-    goTo((current + 1) % banners.length);
-  }, [current, banners.length, goTo]);
+    goTo((current + 1) % slideCount);
+  }, [current, slideCount, goTo]);
 
-  const prev = () => goTo((current - 1 + banners.length) % banners.length);
+  const prev = () => goTo((current - 1 + slideCount) % slideCount);
 
   // Auto-scroll every 4.5 seconds
   useEffect(() => {
@@ -72,7 +91,55 @@ export function BannerCarousel() {
     return () => clearInterval(timer);
   }, [next]);
 
-  const banner = banners[current];
+  // Reset to first slide if the active banner set changes size
+  useEffect(() => {
+    setCurrent(0);
+  }, [usingGraphicBanners]);
+
+  if (usingGraphicBanners) {
+    const banner = graphicBanners[current];
+    return (
+      <div className="relative w-full overflow-hidden" style={{ height: '52vh', minHeight: '380px' }}>
+        <Link
+          href={banner.cta_link || '/products'}
+          className="absolute inset-0 transition-opacity duration-500 block"
+          style={{ opacity: isTransitioning ? 0.6 : 1 }}
+        >
+          <Image src={banner.image_url} alt={banner.title || 'NISA Banner'} fill className="object-cover" priority />
+        </Link>
+
+        {slideCount > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
+              {graphicBanners.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className={`rounded-full transition-all ${
+                    i === current ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  const banner = DEFAULT_BANNERS[current];
 
   return (
     <div className="relative w-full overflow-hidden" style={{ height: '52vh', minHeight: '380px' }}>
@@ -133,7 +200,7 @@ export function BannerCarousel() {
 
       {/* Dot Indicators */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {banners.map((_, i) => (
+        {DEFAULT_BANNERS.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
