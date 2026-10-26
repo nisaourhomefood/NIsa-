@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { getShopifyBanners } from '@/lib/shopify/api';
 
-// GET /api/banners — public read of active homepage banners, for the storefront carousel
+// GET /api/banners — public read of homepage hero banners, managed in Shopify
+// Admin as "hero_banner" Metaobject entries. Empty array falls back to the
+// site's 3 built-in defaults (see banner-carousel.tsx).
 export async function GET() {
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from('cms_banners')
-    .select('id, title, subtitle, cta_text, cta_link, image_url, bg_color')
-    .eq('active', true)
-    .order('sort_order', { ascending: true });
-
-  if (error) return NextResponse.json([], { status: 200 });
-  return NextResponse.json(data || []);
+  const banners = await getShopifyBanners();
+  return NextResponse.json(banners);
 }

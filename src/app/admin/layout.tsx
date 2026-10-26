@@ -20,7 +20,6 @@ import {
   ArrowLeft,
   Menu,
   X,
-  Image as ImageIcon,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -41,7 +40,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Categories', href: '/admin/categories', icon: FolderTree },
     { name: 'Combo Management', href: '/admin/combos', icon: Boxes },
     { name: 'Discounts & Coupons', href: '/admin/discounts', icon: Tag },
-    { name: 'Homepage Banners', href: '/admin/banners', icon: ImageIcon },
     { name: 'Content & Articles', href: '/admin/content', icon: BookOpen },
     { name: 'Review Moderation', href: '/admin/reviews', icon: Star },
     { name: 'Store Settings', href: '/admin/settings', icon: Settings },

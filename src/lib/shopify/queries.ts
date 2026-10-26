@@ -331,3 +331,28 @@ export const GET_VARIANT_PRICES_QUERY = `
     }
   }
 `;
+
+// Homepage hero banners — a "hero_banner" Metaobject definition created in
+// Shopify Admin (Settings -> Custom data -> Metaobjects), entries managed the
+// same way a merchant manages products. No external database involved.
+export const GET_HERO_BANNERS_QUERY = `
+  query GetHeroBanners {
+    metaobjects(type: "hero_banner", first: 10) {
+      nodes {
+        id
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage {
+              image {
+                url
+                altText
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

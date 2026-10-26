@@ -12,6 +12,7 @@ import {
   GET_CART_QUERY,
   GET_VARIANT_PRICES_QUERY,
   GET_PRODUCT_RECOMMENDATIONS_QUERY,
+  GET_HERO_BANNERS_QUERY,
 } from './queries';
 import {
   ShopifyProduct,
@@ -308,4 +309,51 @@ export async function getShopifyVariantPrices(variantIds: string[]): Promise<Map
   }
 
   return prices;
+}
+
+export interface HeroBanner {
+  id: string;
+  title: string;
+  subtitle: string;
+  cta_text: string;
+  cta_link: string;
+  image_url: string;
+  bg_color: string;
+}
+
+interface MetaobjectField {
+  key: string;
+  value: string | null;
+  reference: { image?: { url: string; altText: string | null } } | null;
+}
+
+// Homepage hero banners, managed entirely in Shopify Admin as "hero_banner"
+// Metaobject entries — no external database, same place products live.
+export async function getShopifyBanners(): Promise<HeroBanner[]> {
+  if (!isShopifyConfigured()) return [];
+
+  const { data, errors } = await shopifyFetch<{
+    metaobjects: { nodes: { id: string; fields: MetaobjectField[] }[] };
+  }>({
+    query: GET_HERO_BANNERS_QUERY,
+    revalidate: 60,
+    tags: ['shopify_banners'],
+  });
+
+  if (errors) {
+    console.warn('[Shopify] getShopifyBanners returned partial errors:', errors);
+  }
+
+  return (data?.metaobjects?.nodes || []).map((node) => {
+    const get = (key: string) => node.fields.find((f) => f.key === key);
+    return {
+      id: node.id,
+      title: get('title')?.value || '',
+      subtitle: get('subtitle')?.value || '',
+      cta_text: get('cta_text')?.value || 'Shop Now',
+      cta_link: get('cta_link')?.value || '/products',
+      image_url: get('image')?.reference?.image?.url || '',
+      bg_color: get('bg_color')?.value || '#1C0A08',
+    };
+  }).filter((b) => b.image_url && b.title);
 }
