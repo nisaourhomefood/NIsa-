@@ -77,23 +77,25 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* ── Card Body ── */}
       <div className="p-2.5 sm:p-4 flex-1 flex flex-col gap-2">
 
-        {/* Rating */}
-        <div className="flex items-center gap-1">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-3 h-3 ${
-                  i < Math.floor(product.average_rating || 5)
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'text-stone-200'
-                }`}
-              />
-            ))}
+        {/* Rating — only shown once real reviews exist */}
+        {product.average_rating != null && product.reviews_count ? (
+          <div className="flex items-center gap-1">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-3 h-3 ${
+                    i < Math.floor(product.average_rating!)
+                      ? 'fill-amber-400 text-amber-400'
+                      : 'text-stone-200'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] font-bold text-stone-900">{product.average_rating}</span>
+            <span className="text-[10px] text-stone-400">({product.reviews_count})</span>
           </div>
-          <span className="text-[10px] font-bold text-stone-900">{product.average_rating || 4.9}</span>
-          <span className="text-[10px] text-stone-400">({product.reviews_count || 30})</span>
-        </div>
+        ) : null}
 
         {/* Product name */}
         <Link href={`/products/${product.slug}`} className="cursor-pointer">
@@ -130,36 +132,39 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
 
-        {/* Price + Add to Cart */}
-        <div className="flex items-center justify-between gap-1.5 pt-1 mt-auto border-t border-stone-100">
-          <div className="min-w-0">
-            <div className="flex items-baseline gap-1 flex-wrap">
-              <span className="text-sm sm:text-base font-extrabold text-[#8B1E10] leading-tight">
-                {formatCurrency(selectedVariant.price)}
-              </span>
-              {selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price && (
-                <span className="text-[10px] text-stone-400 line-through font-medium">
-                  {formatCurrency(selectedVariant.compare_at_price)}
-                </span>
-              )}
-            </div>
-            <span className="text-[9px] text-stone-400 block">Incl. taxes</span>
-          </div>
-
+        {/* Full-width Add to Cart with price inline */}
+        <div className="pt-1 mt-auto space-y-1.5">
           <button
             onClick={handleAddToCart}
-            className={`shrink-0 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl font-extrabold text-[10px] sm:text-xs flex items-center gap-1 transition-all cursor-pointer ${
+            className={`w-full flex items-center justify-between gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-extrabold text-[11px] sm:text-xs transition-all cursor-pointer ${
               addedSuccess
                 ? 'bg-emerald-600 text-white'
                 : 'bg-[#8B1E10] hover:bg-[#72160B] text-white active:scale-95'
             }`}
           >
             {addedSuccess ? (
-              <><Check className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Added!</span><span className="sm:hidden">✓</span></>
+              <span className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" /> Added!
+              </span>
             ) : (
-              <><ShoppingCart className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Add to Cart</span><span className="sm:hidden">Add</span></>
+              <span className="flex items-center gap-1.5">
+                <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+              </span>
             )}
+            <span className="flex items-baseline gap-1">
+              <span className="text-xs sm:text-sm font-black">{formatCurrency(selectedVariant.price)}</span>
+              {selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price && (
+                <span className="text-[10px] text-white/60 line-through font-medium">
+                  {formatCurrency(selectedVariant.compare_at_price)}
+                </span>
+              )}
+            </span>
           </button>
+
+          <div className="flex items-center justify-center gap-3 text-[9px] text-stone-400 font-bold uppercase tracking-wide">
+            <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Hand-Made</span>
+            <span className="flex items-center gap-1"><Check className="w-3 h-3" /> No Preservatives</span>
+          </div>
         </div>
 
       </div>

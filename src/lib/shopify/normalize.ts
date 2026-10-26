@@ -85,7 +85,9 @@ export function normalizeShopifyProduct(product: ShopifyProduct): ProductWithVar
     productType = 'sweet';
   }
 
-  // Parse Metafields
+  // Parse Metafields — set per-product in Shopify Admin (Product > Metafields, namespace
+  // "custom"). No generic fallback text here: a product with an empty metafield shows that
+  // section as "not added yet" in the UI rather than the same copy as every other product.
   const rawIngredients = getMetafieldValue(product, 'ingredients');
   let ingredients: string[] = [];
   if (rawIngredients) {
@@ -96,27 +98,10 @@ export function normalizeShopifyProduct(product: ShopifyProduct): ProductWithVar
       ingredients = rawIngredients.split(',').map((s) => s.trim()).filter(Boolean);
     }
   }
-  if (ingredients.length === 0) {
-    ingredients = [
-      'Fresh Boneless Country Cuts',
-      'Cold-Pressed Sesame Oil (Nuvvula Nune)',
-      'Guntur Teja & Byadgi Chilies',
-      'Stone-Ground Ginger-Garlic Paste',
-      'Hand-Pounded Masala Spices',
-      'Natural Sea Salt',
-      'Lemon Juice',
-    ];
-  }
 
-  const storageInfo =
-    getMetafieldValue(product, 'storage_info') ||
-    'Store in a cool, dry pantry away from direct sunlight. Always use a dry spoon and keep the oil layer intact.';
-
-  const preparationInfo =
-    getMetafieldValue(product, 'preparation_info') ||
-    'Prepared in traditional small batches in brass Uruli vessels using authentic Tenali recipes passed down for three generations.';
-
-  const shelfLife = getMetafieldValue(product, 'shelf_life') || '6 Months (Unopened) / 3 Months (Opened)';
+  const storageInfo = getMetafieldValue(product, 'storage_info');
+  const preparationInfo = getMetafieldValue(product, 'preparation_info');
+  const shelfLife = getMetafieldValue(product, 'shelf_life') || '';
 
   // Build variants
   const variantsNodes = product.variants?.nodes || [];
@@ -162,8 +147,8 @@ export function normalizeShopifyProduct(product: ShopifyProduct): ProductWithVar
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     variants,
-    reviews_count: 48,
-    average_rating: 4.9,
+    reviews_count: 0,
+    average_rating: undefined,
   };
 }
 

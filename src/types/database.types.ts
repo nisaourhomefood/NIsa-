@@ -168,6 +168,7 @@ export interface Review {
   is_verified_purchase: boolean;
   is_approved: boolean;
   created_at: string;
+  image_url?: string;
 }
 
 export interface AdminUser {
