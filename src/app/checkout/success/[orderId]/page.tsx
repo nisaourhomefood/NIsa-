@@ -251,7 +251,7 @@ export default function OrderSuccessPage() {
                 <div key={item.variant_id} className="py-3 first:pt-0 flex items-center justify-between gap-4 text-xs">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-stone-100 border border-stone-200 shrink-0">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" />
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-black text-stone-900 text-xs sm:text-sm truncate">{item.name}</h4>

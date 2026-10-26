@@ -130,7 +130,7 @@ export function RecipesPageClient() {
           >
             <div>
               <div className="relative aspect-16/10 w-full bg-stone-100 overflow-hidden">
-                <Image src={post.image} alt={post.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                <Image src={post.image} alt={post.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute top-3 left-3 bg-[#8B1E10] text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded shadow-xs">
                   {post.categoryLabel}
                 </div>
@@ -175,7 +175,7 @@ export function RecipesPageClient() {
             </div>
 
             <div className="relative aspect-16/9 w-full rounded-2xl overflow-hidden bg-stone-100">
-              <Image src={selectedStory.image} alt={selectedStory.title} fill className="object-cover" />
+              <Image src={selectedStory.image} alt={selectedStory.title} fill sizes="(max-width: 768px) 100vw, 700px" className="object-cover" />
             </div>
 
             <div className="text-sm text-stone-700 leading-relaxed font-medium space-y-3 pt-2">

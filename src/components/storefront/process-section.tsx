@@ -71,6 +71,7 @@ export function ProcessSection() {
                   src={step.image}
                   alt={step.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3 bg-[#8B1E10] text-[#FAF6F0] text-xs font-extrabold px-3 py-1 rounded-full shadow-xs">

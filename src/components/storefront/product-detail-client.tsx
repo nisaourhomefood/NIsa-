@@ -141,6 +141,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
               src={galleryImages[activeImageIndex] || galleryImages[0]}
               alt={product.name}
               fill
+              sizes="(max-width: 1024px) 100vw, 600px"
               className="object-cover transition-transform duration-500 group-hover:scale-102"
               priority
             />
@@ -199,7 +200,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     : 'border-[#E8DFC9] opacity-70 hover:opacity-100'
                 }`}
               >
-                <Image src={img} alt="" fill className="object-cover" />
+                <Image src={img} alt="" fill sizes="(max-width: 1024px) 33vw, 200px" className="object-cover" />
                 <span className="absolute bottom-1 right-1 text-[8px] font-black bg-stone-900/80 text-white px-1.5 py-0.5 rounded">
                   Shot {idx + 1}
                 </span>
@@ -572,7 +573,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     />
                     {reviewImageUrl && (
                       <div className="relative w-16 h-16 rounded-xl overflow-hidden mt-2 border border-stone-200">
-                        <Image src={reviewImageUrl} alt="Review dish preview" fill className="object-cover" />
+                        <Image src={reviewImageUrl} alt="Review dish preview" fill sizes="64px" className="object-cover" />
                       </div>
                     )}
                   </div>
@@ -613,7 +614,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
 
                     {rev.image_url && (
                       <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-stone-200 shadow-2xs mt-2">
-                        <Image src={rev.image_url} alt="Customer meal" fill className="object-cover" />
+                        <Image src={rev.image_url} alt="Customer meal" fill sizes="96px" className="object-cover" />
                       </div>
                     )}
                   </div>

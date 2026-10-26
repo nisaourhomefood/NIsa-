@@ -58,6 +58,7 @@ export function Navbar() {
                 src="/nisaralogo.png"
                 alt="NISA (నిస) - Mana Inti Vanta"
                 fill
+                sizes="56px"
                 className="object-contain"
                 priority
               />

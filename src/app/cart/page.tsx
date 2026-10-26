@@ -85,7 +85,7 @@ export default function CartPage() {
                 <div key={`${item.variant_id}-${item.product_id || ''}-${idx}`} className="py-4 first:pt-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shrink-0">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      <Image src={item.image} alt={item.name} fill sizes="80px" className="object-cover" />
                     </div>
                     <div>
                       <Link href={`/products/${item.slug}`} className="text-base font-extrabold text-stone-900 hover:text-[#8B1E10]">

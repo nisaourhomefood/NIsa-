@@ -56,6 +56,7 @@ export default function OurStoryPage() {
                 src="/nisaralogo.png"
                 alt="NISA Pickling Jar Logo"
                 fill
+                sizes="160px"
                 className="object-contain"
               />
             </div>
@@ -78,6 +79,7 @@ export default function OurStoryPage() {
             src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800&auto=format&fit=crop"
             alt="Traditional Andhra Spice Roasting"
             fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover"
           />
         </div>
