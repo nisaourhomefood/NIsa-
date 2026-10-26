@@ -265,48 +265,72 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Validates coupon codes against the real Shopify cart (not a local mock list) so the
   // discount shown here always matches what Shopify will actually charge at checkout.
+  // Creates a brand new Shopify cart from the current items and stores its id/checkout URL.
+  const createFreshShopifyCart = async (): Promise<string | null> => {
+    const lines = items.map((item) => ({
+      merchandiseId: formatShopifyVariantId(item.variant_id),
+      quantity: item.quantity,
+    }));
+    const createRes = await fetch('/api/shopify/cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'create', lines }),
+    });
+    const createData = await createRes.json();
+    const newCartId = createData?.cart?.id || null;
+    if (newCartId && createData.cart.checkoutUrl) {
+      setShopifyCartId(newCartId);
+      setShopifyCheckoutUrl(createData.cart.checkoutUrl);
+      try {
+        localStorage.setItem(SHOPIFY_CART_ID_KEY, newCartId);
+        localStorage.setItem(SHOPIFY_CHECKOUT_URL_KEY, createData.cart.checkoutUrl);
+      } catch {}
+    }
+    return newCartId;
+  };
+
   const applyDiscountCode = async (code: string): Promise<{ success: boolean; message: string }> => {
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode) return { success: false, message: 'Enter a coupon code' };
     if (items.length === 0) return { success: false, message: 'Your cart is empty' };
 
     try {
-      let cartId = shopifyCartId;
-
-      if (!cartId) {
-        const lines = items.map((item) => ({
-          merchandiseId: formatShopifyVariantId(item.variant_id),
-          quantity: item.quantity,
-        }));
-        const createRes = await fetch('/api/shopify/cart', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'create', lines }),
-        });
-        const createData = await createRes.json();
-        cartId = createData?.cart?.id || null;
-        if (cartId && createData.cart.checkoutUrl) {
-          setShopifyCartId(cartId);
-          setShopifyCheckoutUrl(createData.cart.checkoutUrl);
-          try {
-            localStorage.setItem(SHOPIFY_CART_ID_KEY, cartId);
-            localStorage.setItem(SHOPIFY_CHECKOUT_URL_KEY, createData.cart.checkoutUrl);
-          } catch {}
-        }
-      }
+      let cartId = shopifyCartId || (await createFreshShopifyCart());
 
       if (!cartId) {
         return { success: false, message: 'Could not verify coupon right now. Please try again.' };
       }
 
-      const res = await fetch('/api/shopify/cart', {
+      let res = await fetch('/api/shopify/cart', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'discount', cartId, discountCodes: [cleanCode] }),
       });
-      const data = await res.json();
+      let data = await res.json();
+
+      // A stored cart id can go stale (e.g. it already completed a real order, or it's just
+      // old) — Shopify then returns cart: null instead of an applicable/not-applicable answer.
+      // Self-heal once: start a fresh cart with the current items and retry, rather than
+      // telling the customer their coupon is invalid when the real issue is a dead cart.
+      if (!data?.cart) {
+        cartId = await createFreshShopifyCart();
+        if (!cartId) {
+          return { success: false, message: 'Could not verify coupon right now. Please try again.' };
+        }
+        res = await fetch('/api/shopify/cart', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'discount', cartId, discountCodes: [cleanCode] }),
+        });
+        data = await res.json();
+      }
+
       const cart = data?.cart;
-      const matched = cart?.discountCodes?.find(
+      if (!cart) {
+        return { success: false, message: 'Could not verify coupon right now. Please try again.' };
+      }
+
+      const matched = cart.discountCodes?.find(
         (d: { code: string; applicable: boolean }) => d.code?.toUpperCase() === cleanCode
       );
 
@@ -317,7 +341,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'discount', cartId, discountCodes: [] }),
         }).catch(() => {});
-        return { success: false, message: 'Invalid or expired coupon code' };
+        return { success: false, message: "This code isn't valid for your cart — double check the code and your cart total meets its minimum." };
       }
 
       const realDiscountAmount = Math.max(
