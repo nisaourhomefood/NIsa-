@@ -11,6 +11,9 @@ export default function robots(): MetadataRoute.Robots {
           '/',
           '/products',
           '/products/*',
+          '/pickles',
+          '/podis',
+          '/sweets',
           '/combos',
           '/story',
           '/how-we-make-it',
@@ -34,7 +37,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: ['GPTBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended'],
-        allow: ['/', '/products', '/products/*', '/combos', '/story', '/how-we-make-it', '/recipes', '/faq'],
+        allow: ['/', '/products', '/products/*', '/pickles', '/podis', '/sweets', '/combos', '/story', '/how-we-make-it', '/recipes', '/faq'],
         disallow: ['/admin/*', '/api/*', '/checkout/*'],
       },
     ],

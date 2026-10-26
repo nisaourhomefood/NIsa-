@@ -81,9 +81,9 @@ export function Footer() {
               Categories
             </h4>
             <ul className="space-y-2 text-xs text-stone-600 font-medium">
-              <li><Link href="/products?category=non-veg-pickles" className="hover:text-[#8B1E10]">Non-Veg Pickles</Link></li>
-              <li><Link href="/products?category=authentic-podis" className="hover:text-[#8B1E10]">Authentic Podis</Link></li>
-              <li><Link href="/products?category=traditional-sweets" className="hover:text-[#8B1E10]">Traditional Sweets</Link></li>
+              <li><Link href="/pickles" className="hover:text-[#8B1E10]">Non-Veg Pickles</Link></li>
+              <li><Link href="/podis" className="hover:text-[#8B1E10]">Authentic Podis</Link></li>
+              <li><Link href="/sweets" className="hover:text-[#8B1E10]">Traditional Sweets</Link></li>
               <li><Link href="/combos" className="hover:text-[#8B1E10]">Value Combo Packs</Link></li>
             </ul>
           </div>
