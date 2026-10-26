@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import { CartProvider } from '@/lib/store/cart-context';
 import { StorefrontWrapper } from '@/components/storefront-wrapper';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
@@ -42,6 +43,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   openGraph: {
     title: 'NISA (నిస) – Authentic Small-Batch Andhra Non-Veg Pickles & Podis',
     description:
@@ -158,6 +162,7 @@ export default function RootLayout({
           <StorefrontWrapper>{children}</StorefrontWrapper>
         </CartProvider>
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
