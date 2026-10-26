@@ -32,7 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-white border border-stone-200 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:border-[#8B1E10]/40 hover:shadow-lg transition-all duration-300 flex flex-col">
+    <div className="group h-full bg-white border border-stone-200 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs hover:border-[#8B1E10]/40 hover:shadow-lg transition-all duration-300 flex flex-col">
 
       {/* ── Image — square, full width ── */}
       <Link href={`/products/${product.slug}`} className="relative block overflow-hidden bg-stone-100 aspect-square cursor-pointer">
@@ -77,49 +77,51 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* ── Card Body ── */}
       <div className="p-2.5 sm:p-4 flex-1 flex flex-col gap-2">
 
-        {/* Rating — only shown once real reviews exist */}
-        {product.average_rating != null && product.reviews_count ? (
-          <div className="flex items-center gap-1">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-3 h-3 ${
-                    i < Math.floor(product.average_rating!)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-stone-200'
-                  }`}
-                />
-              ))}
+        {/* Rating — reserves its row even when absent, so cards without reviews yet still align */}
+        <div className="h-[15px]">
+          {product.average_rating != null && product.reviews_count ? (
+            <div className="flex items-center gap-1">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-3 h-3 ${
+                      i < Math.floor(product.average_rating!)
+                        ? 'fill-amber-400 text-amber-400'
+                        : 'text-stone-200'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-[10px] font-bold text-stone-900">{product.average_rating}</span>
+              <span className="text-[10px] text-stone-400">({product.reviews_count})</span>
             </div>
-            <span className="text-[10px] font-bold text-stone-900">{product.average_rating}</span>
-            <span className="text-[10px] text-stone-400">({product.reviews_count})</span>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
 
-        {/* Product name */}
+        {/* Product name — fixed 2-line height so short and long titles align the same */}
         <Link href={`/products/${product.slug}`} className="cursor-pointer">
-          <h3 className="text-xs sm:text-sm font-extrabold text-stone-900 hover:text-[#8B1E10] transition-colors leading-snug line-clamp-2">
+          <h3 className="text-xs sm:text-sm font-extrabold text-stone-900 hover:text-[#8B1E10] transition-colors leading-snug line-clamp-2 min-h-[2.2em] sm:min-h-[2.4em]">
             {product.name}
           </h3>
         </Link>
 
-        {/* Description — hidden on very small screens */}
-        <p className="hidden sm:block text-xs text-stone-500 line-clamp-2 leading-relaxed">
+        {/* Description — hidden on very small screens, fixed 2-line height */}
+        <p className="hidden sm:block text-xs text-stone-500 line-clamp-2 leading-relaxed min-h-[2.4em]">
           {product.short_description}
         </p>
 
-        {/* Size Selector */}
+        {/* Size Selector — fixed 3-column grid so 2 vs 3 variants, or long vs short labels, never wrap differently between cards */}
         <div className="space-y-1">
           <span className="text-[9px] sm:text-[10px] font-extrabold text-stone-400 uppercase tracking-wider">Size:</span>
-          <div className="flex flex-wrap gap-1">
+          <div className="grid grid-cols-3 gap-1">
             {product.variants.map((v) => {
               const isSelected = selectedVariant.id === v.id;
               return (
                 <button
                   key={v.id}
                   onClick={() => setSelectedVariant(v)}
-                  className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg font-bold transition-all border cursor-pointer ${
+                  className={`text-[9px] sm:text-xs px-1.5 sm:px-2.5 py-1 rounded-lg font-bold transition-all border cursor-pointer leading-tight ${
                     isSelected
                       ? 'bg-[#8B1E10] text-white border-[#8B1E10]'
                       : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-[#8B1E10]/40'
