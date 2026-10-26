@@ -161,8 +161,8 @@ export default async function HomePage() {
 
             <div className="relative aspect-4/3 rounded-3xl overflow-hidden border border-stone-700 shadow-2xl">
               <Image
-                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop"
-                alt="Traditional Andhra kitchen in Tenali"
+                src="/making.png"
+                alt="Hand-cooking Andhra pickle in a brass uruli at NISA's Tenali kitchen"
                 fill
                 sizes="(max-width: 1024px) 100vw, 500px"
                 className="object-cover"
