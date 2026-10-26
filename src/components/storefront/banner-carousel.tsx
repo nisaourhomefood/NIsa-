@@ -99,7 +99,7 @@ export function BannerCarousel() {
   if (usingGraphicBanners) {
     const banner = graphicBanners[current];
     return (
-      <div className="relative w-full overflow-hidden" style={{ height: '52vh', minHeight: '380px' }}>
+      <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
         <Link
           href={banner.cta_link || '/products'}
           className="absolute inset-0 transition-opacity duration-500 block"
@@ -142,7 +142,7 @@ export function BannerCarousel() {
   const banner = DEFAULT_BANNERS[current];
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: '52vh', minHeight: '380px' }}>
+    <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
       {/* Background Image with overlay */}
       <div
         className="absolute inset-0 transition-opacity duration-500"
@@ -155,10 +155,11 @@ export function BannerCarousel() {
           className="object-cover"
           priority
         />
+        {/* Horizontal scrim for the text column + a bottom scrim as a contrast safety net on bright photos */}
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(90deg, ${banner.bg_color}F0 0%, ${banner.bg_color}99 50%, ${banner.bg_color}44 100%)`,
+            background: `linear-gradient(90deg, ${banner.bg_color}F7 0%, ${banner.bg_color}CC 45%, ${banner.bg_color}66 100%), linear-gradient(0deg, ${banner.bg_color}99 0%, transparent 55%)`,
           }}
         />
       </div>
@@ -169,10 +170,10 @@ export function BannerCarousel() {
           className="max-w-xl transition-all duration-500"
           style={{ opacity: isTransitioning ? 0 : 1, transform: isTransitioning ? 'translateY(12px)' : 'translateY(0)' }}
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-3 sm:mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
             {banner.title}
           </h1>
-          <p className="text-white/80 text-sm sm:text-base font-medium mb-7 max-w-md leading-relaxed">
+          <p className="text-white/90 text-xs sm:text-base font-medium mb-5 sm:mb-7 max-w-md leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {banner.subtitle}
           </p>
           <Link
