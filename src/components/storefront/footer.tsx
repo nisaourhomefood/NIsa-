@@ -19,6 +19,7 @@ export function Footer() {
                   src="/nisaralogo.png"
                   alt="NISA Official Pickling Jar Logo"
                   fill
+                  sizes="48px"
                   className="object-contain"
                 />
               </div>

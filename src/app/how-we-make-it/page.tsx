@@ -84,7 +84,7 @@ export default function HowWeMakeItPage() {
             }`}
           >
             <div className="relative aspect-16/10 w-full lg:w-1/2 rounded-2xl overflow-hidden bg-stone-100 shrink-0">
-              <Image src={item.image} alt={item.title} fill className="object-cover" />
+              <Image src={item.image} alt={item.title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
               <div className="absolute top-4 left-4 bg-[#8B1E10] text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-xs">
                 Step {item.step}
               </div>

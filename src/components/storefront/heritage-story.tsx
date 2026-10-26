@@ -68,7 +68,7 @@ export function HeritageStory() {
         <div className="bg-gradient-to-r from-[#8B1E10] via-[#72160B] to-stone-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="flex items-center gap-4">
             <div className="relative w-16 h-16 shrink-0 bg-white/10 rounded-2xl p-1 backdrop-blur-xs">
-              <Image src="/nisaralogo.png" alt="NISA" fill className="object-contain" />
+              <Image src="/nisaralogo.png" alt="NISA" fill sizes="64px" className="object-contain" />
             </div>
             <div>
               <h4 className="text-lg sm:text-xl font-extrabold text-amber-50">

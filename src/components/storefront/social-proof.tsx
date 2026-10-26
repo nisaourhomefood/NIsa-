@@ -62,7 +62,7 @@ export function SocialProof() {
               className="bg-[#FAF6F0] border border-[#E8DFC9] rounded-3xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-xs group"
             >
               <div className="relative aspect-square w-32 rounded-2xl overflow-hidden bg-stone-900 shrink-0 border border-stone-200">
-                <Image src={vid.thumbnail} alt={vid.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80" />
+                <Image src={vid.thumbnail} alt={vid.name} fill sizes="128px" className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full bg-[#8B1E10] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                     <Play className="w-5 h-5 fill-white text-white ml-0.5" />
@@ -99,6 +99,7 @@ export function SocialProof() {
                 src={post.image}
                 alt="NISA Social Proof"
                 fill
+                sizes="(max-width: 768px) 50vw, 25vw"
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 text-white text-xs font-medium">

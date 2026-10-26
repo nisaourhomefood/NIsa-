@@ -231,7 +231,7 @@ export default async function CustomerAccountPage({
                     <div key={idx} className="flex items-center gap-2 bg-[#FAF6F0] rounded-xl p-2 border border-[#E8DFC9] shrink-0">
                       {item.image?.url && (
                         <div className="relative w-9 h-9 rounded-lg overflow-hidden shrink-0 border border-stone-200">
-                          <Image src={item.image.url} alt={item.image.altText || item.title} fill className="object-cover" />
+                          <Image src={item.image.url} alt={item.image.altText || item.title} fill sizes="36px" className="object-cover" />
                         </div>
                       )}
                       <div className="min-w-0 pr-2">

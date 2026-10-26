@@ -19,6 +19,7 @@ export function KitchenStory() {
                   src="/nisaralogo.png"
                   alt="NISA Mana Inti Vanta Official Logo"
                   fill
+                  sizes="176px"
                   className="object-contain"
                 />
               </div>

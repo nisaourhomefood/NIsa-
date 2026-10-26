@@ -164,6 +164,7 @@ export default async function HomePage() {
                 src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop"
                 alt="Traditional Andhra kitchen in Tenali"
                 fill
+                sizes="(max-width: 1024px) 100vw, 500px"
                 className="object-cover"
               />
             </div>

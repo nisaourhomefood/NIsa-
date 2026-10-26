@@ -155,7 +155,7 @@ export function CartDrawer() {
                       <div key={`${item.variant_id}-${item.product_id || ''}-${idx}`} className="py-3.5 first:pt-0 space-y-2.5">
                         <div className="flex gap-3 items-start">
                           <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 shrink-0">
-                            <Image src={item.image} alt={item.name} fill className="object-cover" />
+                            <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
                           </div>
 
                           <div className="flex-1 min-w-0 space-y-1">

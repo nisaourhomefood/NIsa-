@@ -61,6 +61,7 @@ export function MealPairings() {
                   src={item.image}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 20vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

@@ -59,7 +59,7 @@ export function CombosPageClient() {
               <div>
                 {/* Main image */}
                 <div className="relative aspect-4/3 w-full bg-stone-100 overflow-hidden">
-                  <Image src={combo.image} alt={combo.name} fill className="object-cover" />
+                  <Image src={combo.image} alt={combo.name} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                   <div className="absolute top-4 left-4 bg-[#8B1E10] text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-xs">
                     {combo.badge}
                   </div>

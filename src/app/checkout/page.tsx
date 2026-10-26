@@ -572,7 +572,7 @@ export default function CheckoutPage() {
                   <div key={item.id} className="p-3 bg-white space-y-2">
                     <div className="flex items-center gap-3">
                       <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-stone-100 shrink-0 border border-stone-200">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                        <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="font-extrabold text-stone-900 text-xs truncate block">{item.name}</span>

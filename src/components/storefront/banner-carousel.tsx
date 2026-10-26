@@ -105,7 +105,7 @@ export function BannerCarousel() {
           className="absolute inset-0 transition-opacity duration-500 block"
           style={{ opacity: isTransitioning ? 0.6 : 1 }}
         >
-          <Image src={banner.image_url} alt={banner.title || 'NISA Banner'} fill className="object-cover" priority />
+          <Image src={banner.image_url} alt={banner.title || 'NISA Banner'} fill sizes="100vw" className="object-cover" priority />
         </Link>
 
         {slideCount > 1 && (
@@ -152,6 +152,7 @@ export function BannerCarousel() {
           src={banner.image_url}
           alt={banner.title}
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />
