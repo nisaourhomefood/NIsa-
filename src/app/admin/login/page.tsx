@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
           <Input
             label="Admin Email Address *"
             type="email"
-            placeholder="admin@nisafoods.com"
+            placeholder="admin@nisaourhomefood.in"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

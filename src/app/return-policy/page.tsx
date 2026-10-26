@@ -12,7 +12,7 @@ export default function ReturnPolicyPage() {
         <p>Due to the perishable and consumable nature of food items, unopened jars can only be returned if received in a damaged condition or with seal compromise.</p>
 
         <h2 className="text-sm font-bold text-[#8B1E10]">2. Damaged Delivery Replacement</h2>
-        <p>If your package arrives damaged, please take a photo/video upon unboxing and email us at care@nisafoods.com or WhatsApp +91 98765 43210 within 24 hours for a instant replacement jar dispatch.</p>
+        <p>If your package arrives damaged, please take a photo/video upon unboxing and email us at nisaourhomefood@gmail.com or WhatsApp +91 75693 44938 within 24 hours for a instant replacement jar dispatch.</p>
 
         <h2 className="text-sm font-bold text-[#8B1E10]">3. Refunds</h2>
         <p>Approved refunds are processed to original payment method or UPI within 3 to 5 business days.</p>

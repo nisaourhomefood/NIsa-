@@ -39,11 +39,11 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#8B1E10] shrink-0" />
-                <span>Customer Care: +91 98765 43210</span>
+                <span>Customer Care: +91 75693 44938</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#8B1E10] shrink-0" />
-                <span>care@nisafoods.com</span>
+                <span>nisaourhomefood@gmail.com</span>
               </div>
             </div>
 

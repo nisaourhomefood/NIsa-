@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     const environment = process.env.CASHFREE_ENVIRONMENT || 'PRODUCTION';
 
     const orderId = order_id || `nisa_${Date.now().toString().slice(-8)}`;
-    const cleanPhone = (customer?.phone || '9876543210').replace(/\D/g, '').slice(-10);
+    const cleanPhone = (customer?.phone || '7569344938').replace(/\D/g, '').slice(-10);
     const cleanCustomerId = (customer?.email || `cust_${cleanPhone}`).replace(/[^a-zA-Z0-9_-]/g, '_');
 
     // 1. Production or Sandbox Cashfree Orders API
@@ -74,11 +74,11 @@ export async function POST(req: Request) {
         customer_details: {
           customer_id: cleanCustomerId,
           customer_name: (customer?.full_name || 'Customer').trim(),
-          customer_email: (customer?.email || 'customer@nisafoods.com').trim(),
-          customer_phone: cleanPhone.length === 10 ? cleanPhone : '9876543210',
+          customer_email: (customer?.email || 'nisaourhomefood@gmail.com').trim(),
+          customer_phone: cleanPhone.length === 10 ? cleanPhone : '7569344938',
         },
         order_meta: {
-          notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nisafoods.com'}/api/payment/cashfree/webhook`,
+          notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in'}/api/payment/cashfree/webhook`,
         },
         order_note: 'Authentic Small-Batch Andhra Food - NISA Tenali',
       };

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Globe, Save, Check } from 'lucide-react';
+import { Globe, Save, Check, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -9,7 +9,7 @@ export default function AdminSEOPage() {
   const [metaTitle, setMetaTitle] = useState('NISA (నిస) - Authentic Small-Batch Andhra Pickles | Tenali AP');
   const [metaDesc, setMetaDesc] = useState('Buy handcrafted Andhra boneless chicken pickle, gongura mutton pickle, sea prawns pickle & chicken podi online. Small-batch home recipes made in Tenali with wood-pressed sesame oil.');
   const [ogImage, setOgImage] = useState('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1200&auto=format&fit=crop');
-  const [canonicalUrl, setCanonicalUrl] = useState('https://nisafoods.com');
+  const [canonicalUrl, setCanonicalUrl] = useState('https://nisaourhomefood.in');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSaveSEO = (e: React.FormEvent) => {
@@ -34,6 +34,16 @@ export default function AdminSEOPage() {
             {savedSuccess ? 'SEO Saved!' : 'Save SEO Meta'}
           </Button>
         </div>
+      </div>
+
+      {/* Disconnected-from-live-site warning */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4">
+        <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 font-medium">
+          <strong className="font-extrabold">This form doesn&apos;t actually change your site&apos;s SEO.</strong> It
+          shows &quot;Saved!&quot; but nothing here is read by the live site — real metadata is set directly in the
+          page files (src/app/layout.tsx and each page&apos;s own metadata). Ask Claude to change it there instead.
+        </p>
       </div>
 
       <form onSubmit={handleSaveSEO} className="space-y-4 sm:space-y-6">

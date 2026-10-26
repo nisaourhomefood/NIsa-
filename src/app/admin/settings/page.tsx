@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, Check, Megaphone } from 'lucide-react';
+import { Settings, Save, Check, Megaphone, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MarqueeAnnouncementBar } from '@/components/storefront/marquee-bar';
@@ -10,9 +10,9 @@ export default function AdminSettingsPage() {
   const [brandName, setBrandName] = useState('NISA');
   const [descriptor, setDescriptor] = useState('Mana Inti Vanta');
   const [address, setAddress] = useState('NISA Foods, Door No. 4-12-88, Guntur Road, Tenali - 522201, AP');
-  const [phone, setPhone] = useState('+91 98765 43210');
-  const [whatsapp, setWhatsapp] = useState('+91 98765 43210');
-  const [email, setEmail] = useState('care@nisafoods.com');
+  const [phone, setPhone] = useState('+91 75693 44938');
+  const [whatsapp, setWhatsapp] = useState('+91 75693 44938');
+  const [email, setEmail] = useState('nisaourhomefood@gmail.com');
   const [flatShipping, setFlatShipping] = useState('79');
   const [announcementText, setAnnouncementText] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -108,6 +108,17 @@ export default function AdminSettingsPage() {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Disconnected-from-live-site warning */}
+      <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4">
+        <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-900 font-medium">
+          <strong className="font-extrabold">Nothing below this line actually saves anywhere.</strong> The form shows
+          a &quot;Saved!&quot; message, but brand name, address, phone, email, and shipping fee here are not connected
+          to your live site — those are hardcoded directly in the site&apos;s pages. To change them for real, edit
+          the page files directly or ask Claude to update them everywhere.
+        </p>
       </div>
 
       <form onSubmit={handleSaveSettings} className="space-y-4 sm:space-y-6">

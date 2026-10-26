@@ -8,7 +8,7 @@ import { StorefrontWrapper } from '@/components/storefront-wrapper';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisafoods.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -95,7 +95,7 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': ['Organization', 'FoodEstablishment', 'Store'],
+        '@type': ['Organization', 'Store'],
         '@id': `${BASE_URL}/#organization`,
         name: 'NISA - Mana Inti Vanta',
         alternateName: ['NISA Foods', 'నిస మన ఇంటి వంట', 'NISA Tenali Pickles'],
@@ -117,13 +117,12 @@ export default function RootLayout({
           latitude: 16.2435,
           longitude: 80.6400,
         },
-        servesCuisine: 'Authentic Andhra Cuisine, Traditional Pickles, Podis, Sweets',
         priceRange: '₹₹',
-        telephone: '+919876543210',
-        email: 'care@nisafoods.com',
+        telephone: '+917569344938',
+        email: 'nisaourhomefood@gmail.com',
         contactPoint: {
           '@type': 'ContactPoint',
-          telephone: '+919876543210',
+          telephone: '+917569344938',
           contactType: 'customer service',
           areaServed: 'IN',
           availableLanguage: ['English', 'Telugu', 'Hindi'],

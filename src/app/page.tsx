@@ -44,7 +44,7 @@ export default async function HomePage() {
     },
     {
       q: 'How can I contact NISA?',
-      a: 'WhatsApp +91 7569344938 (Mon–Sat, 9 AM–7 PM IST) or email care@nisafoods.com.',
+      a: 'WhatsApp +91 7569344938 (Mon–Sat, 9 AM–7 PM IST) or email nisaourhomefood@gmail.com.',
     },
   ];
 
