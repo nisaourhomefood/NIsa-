@@ -142,44 +142,6 @@ export default function RootLayout({
           'query-input': 'required name=search_term_string',
         },
       },
-      {
-        '@type': 'FAQPage',
-        '@id': `${BASE_URL}/#faq`,
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: 'What makes NISA pickles authentic to Tenali, Andhra Pradesh?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'NISA (నిస) pickles are prepared in small artisanal batches in Tenali, Andhra Pradesh using 100% traditional wood-pressed sesame oil (nuvvula nune), hand-pounded Guntur red chilies, fresh garlic, and authentic spices with zero artificial preservatives or vinegar.',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'How long do NISA non-veg pickles last without preservatives?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Our pickles have a natural shelf life of 6 months from manufacture date. The natural preservation comes from slow-cooking in pure sesame oil, natural sea salt, and lemon juice.',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'What payment methods does NISA accept?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'You can order directly via WhatsApp and pay by UPI, or pay online through Cashfree (Google Pay, PhonePe, Paytm, BHIM UPI, Visa, Mastercard, RuPay Credit/Debit Cards, NetBanking).',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Does NISA ship pickles across India?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Yes, NISA ships freshly prepared batches of non-veg pickles, podis, and sweets to all pin codes across India with express doorstep delivery in 3 to 5 business days.',
-            },
-          },
-        ],
-      },
     ],
   };
 

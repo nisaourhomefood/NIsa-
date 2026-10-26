@@ -1,8 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { CheckCircle2, ArrowRight, ShieldCheck, Flame, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+export const metadata: Metadata = {
+  title: 'How We Make It — Our Process',
+  description:
+    'From handpicked Guntur red chilies and cold wood-pressed sesame oil to small-batch brass Uruli cooking: how NISA prepares every jar of Andhra pickle in Tenali.',
+  alternates: { canonical: '/how-we-make-it' },
+};
 
 export default function HowWeMakeItPage() {
   const steps = [

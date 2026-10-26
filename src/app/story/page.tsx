@@ -1,8 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { MapPin, Heart, Flame, ShieldCheck, ArrowRight, Award, Sparkles, User, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+export const metadata: Metadata = {
+  title: 'Our Story — Saraswati\'s Kitchen in Tenali',
+  description:
+    'The story behind NISA: Andhra non-veg pickles and podis hand-cooked by Saraswati in small 5kg brass Uruli batches in Tenali, Guntur district, using traditional recipes and wood-pressed sesame oil.',
+  alternates: { canonical: '/story' },
+};
 
 export default function OurStoryPage() {
   return (
