@@ -6,7 +6,7 @@ export async function GET() {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('cms_banners')
-    .select('id, title, image_url, cta_link')
+    .select('id, title, subtitle, cta_text, cta_link, image_url, bg_color')
     .eq('active', true)
     .order('sort_order', { ascending: true });
 

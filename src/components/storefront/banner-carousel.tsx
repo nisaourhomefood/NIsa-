@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface TextBanner {
+interface Banner {
   id: string;
   title: string;
   subtitle: string;
@@ -15,14 +15,7 @@ interface TextBanner {
   bg_color: string;
 }
 
-interface GraphicBanner {
-  id: string;
-  title: string;
-  image_url: string;
-  cta_link: string;
-}
-
-const DEFAULT_BANNERS: TextBanner[] = [
+const DEFAULT_BANNERS: Banner[] = [
   {
     id: 'b1',
     title: 'The Taste of Andhra, Just Like Home.',
@@ -52,8 +45,22 @@ const DEFAULT_BANNERS: TextBanner[] = [
   },
 ];
 
+// Fills in sensible defaults for any field an admin-created banner left blank,
+// so a half-filled entry never renders an empty title or a dead-looking button.
+function withDefaults(b: Partial<Banner> & { id: string; image_url: string }): Banner {
+  return {
+    id: b.id,
+    title: b.title || 'NISA — Authentic Andhra Home Food',
+    subtitle: b.subtitle || '',
+    cta_text: b.cta_text || 'Shop Now',
+    cta_link: b.cta_link || '/products',
+    image_url: b.image_url,
+    bg_color: b.bg_color || '#1C0A08',
+  };
+}
+
 export function BannerCarousel() {
-  const [graphicBanners, setGraphicBanners] = useState<GraphicBanner[]>([]);
+  const [banners, setBanners] = useState<Banner[]>(DEFAULT_BANNERS);
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -61,13 +68,15 @@ export function BannerCarousel() {
     fetch('/api/banners')
       .then((r) => r.json())
       .then((d) => {
-        if (Array.isArray(d) && d.length > 0) setGraphicBanners(d);
+        if (Array.isArray(d) && d.length > 0) {
+          setBanners(d.map(withDefaults));
+          setCurrent(0);
+        }
       })
       .catch(() => null);
   }, []);
 
-  const usingGraphicBanners = graphicBanners.length > 0;
-  const slideCount = usingGraphicBanners ? graphicBanners.length : DEFAULT_BANNERS.length;
+  const slideCount = banners.length;
 
   const goTo = useCallback(
     (idx: number) => {
@@ -87,59 +96,12 @@ export function BannerCarousel() {
 
   // Auto-scroll every 4.5 seconds
   useEffect(() => {
+    if (slideCount <= 1) return;
     const timer = setInterval(next, 4500);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [next, slideCount]);
 
-  // Reset to first slide if the active banner set changes size
-  useEffect(() => {
-    setCurrent(0);
-  }, [usingGraphicBanners]);
-
-  if (usingGraphicBanners) {
-    const banner = graphicBanners[current];
-    return (
-      <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
-        <Link
-          href={banner.cta_link || '/products'}
-          className="absolute inset-0 transition-opacity duration-500 block"
-          style={{ opacity: isTransitioning ? 0.6 : 1 }}
-        >
-          <Image src={banner.image_url} alt={banner.title || 'NISA Banner'} fill sizes="100vw" className="object-cover" priority />
-        </Link>
-
-        {slideCount > 1 && (
-          <>
-            <button
-              onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              {graphicBanners.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className={`rounded-full transition-all ${
-                    i === current ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
-                  }`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    );
-  }
-
-  const banner = DEFAULT_BANNERS[current];
+  const banner = banners[current];
 
   return (
     <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
@@ -174,9 +136,11 @@ export function BannerCarousel() {
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-3 sm:mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
             {banner.title}
           </h1>
-          <p className="text-white/90 text-xs sm:text-base font-medium mb-5 sm:mb-7 max-w-md leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-            {banner.subtitle}
-          </p>
+          {banner.subtitle && (
+            <p className="text-white/90 text-xs sm:text-base font-medium mb-5 sm:mb-7 max-w-md leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+              {banner.subtitle}
+            </p>
+          )}
           <Link
             href={banner.cta_link}
             className="inline-block bg-[#8B1E10] hover:bg-[#72160B] text-white font-bold px-7 py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
@@ -187,33 +151,35 @@ export function BannerCarousel() {
       </div>
 
       {/* Prev / Next Arrows */}
-      <button
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
-
-      {/* Dot Indicators */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {DEFAULT_BANNERS.map((_, i) => (
+      {slideCount > 1 && (
+        <>
           <button
-            key={i}
-            onClick={() => goTo(i)}
-            className={`rounded-full transition-all ${
-              i === current
-                ? 'w-6 h-2.5 bg-white'
-                : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
-            }`}
-          />
-        ))}
-      </div>
+            onClick={prev}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center text-white transition-all border border-white/20"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          {/* Dot Indicators */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
+            {banners.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`rounded-full transition-all ${
+                  i === current ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
