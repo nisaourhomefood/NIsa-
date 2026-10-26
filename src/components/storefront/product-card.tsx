@@ -3,15 +3,20 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, ShoppingCart, Check, ShieldCheck } from 'lucide-react';
+import { Star, ShoppingCart, Check } from 'lucide-react';
 import { ProductWithVariants, ProductVariant } from '@/types/database.types';
 import { formatCurrency, calculateDiscountPercentage } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
-import { Badge } from '@/components/ui/badge';
 
 interface ProductCardProps {
   product: ProductWithVariants;
 }
+
+const TYPE_LABEL: Record<string, string> = {
+  'non-veg-pickle': 'Pickle',
+  podi: 'Podi',
+  sweet: 'Sweet',
+};
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
@@ -64,110 +69,79 @@ export function ProductCard({ product }: ProductCardProps) {
             {discountPercent}% OFF
           </div>
         )}
-
-        {/* Bottom quality bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent px-2 py-2">
-          <span className="flex items-center gap-1 text-[9px] sm:text-[10px] text-white/90 font-medium">
-            <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
-            <span className="truncate">Wood-Pressed Sesame Oil</span>
-          </span>
-        </div>
       </Link>
 
       {/* ── Card Body ── */}
-      <div className="p-2.5 sm:p-4 flex-1 flex flex-col gap-2">
+      <div className="p-2 sm:p-3 flex-1 flex flex-col gap-1.5">
 
-        {/* Rating — reserves its row even when absent, so cards without reviews yet still align */}
-        <div className="h-[15px]">
+        {/* Type label + rating (rating only shows once real reviews exist) */}
+        <div className="flex items-center justify-between gap-1 h-[13px]">
+          <span className="text-[9px] font-extrabold text-[#8B1E10] uppercase tracking-wider">
+            {TYPE_LABEL[product.product_type] || ''}
+          </span>
           {product.average_rating != null && product.reviews_count ? (
-            <div className="flex items-center gap-1">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3 h-3 ${
-                      i < Math.floor(product.average_rating!)
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'text-stone-200'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-[10px] font-bold text-stone-900">{product.average_rating}</span>
-              <span className="text-[10px] text-stone-400">({product.reviews_count})</span>
-            </div>
+            <span className="flex items-center gap-0.5 text-[10px] font-bold text-stone-700">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              {product.average_rating}
+              <span className="text-stone-400 font-medium">({product.reviews_count})</span>
+            </span>
           ) : null}
         </div>
 
-        {/* Product name — fixed 2-line height so short and long titles align the same */}
+        {/* Product name — compact 2-line reservation so cards align regardless of title length */}
         <Link href={`/products/${product.slug}`} className="cursor-pointer">
-          <h3 className="text-xs sm:text-sm font-extrabold text-stone-900 hover:text-[#8B1E10] transition-colors leading-snug line-clamp-2 min-h-[2.2em] sm:min-h-[2.4em]">
+          <h3 className="text-xs sm:text-sm font-extrabold text-stone-900 hover:text-[#8B1E10] transition-colors leading-tight line-clamp-2 min-h-[2em]">
             {product.name}
           </h3>
         </Link>
 
-        {/* Description — hidden on very small screens, fixed 2-line height */}
-        <p className="hidden sm:block text-xs text-stone-500 line-clamp-2 leading-relaxed min-h-[2.4em]">
-          {product.short_description}
-        </p>
-
-        {/* Size Selector — fixed 3-column grid so 2 vs 3 variants, or long vs short labels, never wrap differently between cards */}
-        <div className="space-y-1">
-          <span className="text-[9px] sm:text-[10px] font-extrabold text-stone-400 uppercase tracking-wider">Size:</span>
-          <div className="grid grid-cols-3 gap-1">
-            {product.variants.map((v) => {
-              const isSelected = selectedVariant.id === v.id;
-              return (
-                <button
-                  key={v.id}
-                  onClick={() => setSelectedVariant(v)}
-                  className={`text-[9px] sm:text-xs px-1.5 sm:px-2.5 py-1 rounded-lg font-bold transition-all border cursor-pointer leading-tight ${
-                    isSelected
-                      ? 'bg-[#8B1E10] text-white border-[#8B1E10]'
-                      : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-[#8B1E10]/40'
-                  }`}
-                >
-                  {v.size_label}
-                </button>
-              );
-            })}
-          </div>
+        {/* Size Selector */}
+        <div className="grid grid-cols-3 gap-1">
+          {product.variants.map((v) => {
+            const isSelected = selectedVariant.id === v.id;
+            return (
+              <button
+                key={v.id}
+                onClick={() => setSelectedVariant(v)}
+                className={`text-[9px] sm:text-xs px-1.5 sm:px-2.5 py-1 rounded-lg font-bold transition-all border cursor-pointer leading-tight ${
+                  isSelected
+                    ? 'bg-[#8B1E10] text-white border-[#8B1E10]'
+                    : 'bg-stone-50 text-stone-700 border-stone-200 hover:border-[#8B1E10]/40'
+                }`}
+              >
+                {v.size_label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Full-width Add to Cart with price inline */}
-        <div className="pt-1 mt-auto space-y-1.5">
-          <button
-            onClick={handleAddToCart}
-            className={`w-full flex items-center justify-between gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-extrabold text-[11px] sm:text-xs transition-all cursor-pointer ${
-              addedSuccess
-                ? 'bg-emerald-600 text-white'
-                : 'bg-[#8B1E10] hover:bg-[#72160B] text-white active:scale-95'
-            }`}
-          >
-            {addedSuccess ? (
-              <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5" /> Added!
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5">
-                <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+        <button
+          onClick={handleAddToCart}
+          className={`mt-auto w-full flex items-center justify-between gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-extrabold text-[11px] sm:text-xs transition-all cursor-pointer ${
+            addedSuccess
+              ? 'bg-emerald-600 text-white'
+              : 'bg-[#8B1E10] hover:bg-[#72160B] text-white active:scale-95'
+          }`}
+        >
+          {addedSuccess ? (
+            <span className="flex items-center gap-1.5">
+              <Check className="w-3.5 h-3.5" /> Added!
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5">
+              <ShoppingCart className="w-3.5 h-3.5" /> Add to Cart
+            </span>
+          )}
+          <span className="flex items-baseline gap-1">
+            <span className="text-xs sm:text-sm font-black">{formatCurrency(selectedVariant.price)}</span>
+            {selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price && (
+              <span className="text-[10px] text-white/60 line-through font-medium">
+                {formatCurrency(selectedVariant.compare_at_price)}
               </span>
             )}
-            <span className="flex items-baseline gap-1">
-              <span className="text-xs sm:text-sm font-black">{formatCurrency(selectedVariant.price)}</span>
-              {selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price && (
-                <span className="text-[10px] text-white/60 line-through font-medium">
-                  {formatCurrency(selectedVariant.compare_at_price)}
-                </span>
-              )}
-            </span>
-          </button>
-
-          <div className="flex items-center justify-center gap-3 text-[9px] text-stone-400 font-bold uppercase tracking-wide">
-            <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Hand-Made</span>
-            <span className="flex items-center gap-1"><Check className="w-3 h-3" /> No Preservatives</span>
-          </div>
-        </div>
+          </span>
+        </button>
 
       </div>
     </div>
