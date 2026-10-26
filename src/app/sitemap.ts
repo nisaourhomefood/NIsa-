@@ -1,8 +1,7 @@
 import { MetadataRoute } from 'next';
-import { INITIAL_COMBOS } from '@/lib/data/mock-combos';
 import { getShopifyProducts } from '@/lib/shopify/api';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisafoods.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
@@ -92,13 +91,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // Dynamic Combo Pages
-  const comboRoutes: MetadataRoute.Sitemap = INITIAL_COMBOS.map((c) => ({
-    url: `${BASE_URL}/combos`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
-
-  return [...staticRoutes, ...productRoutes, ...comboRoutes];
+  return [...staticRoutes, ...productRoutes];
 }

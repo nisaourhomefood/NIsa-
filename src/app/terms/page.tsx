@@ -8,7 +8,7 @@ export default function TermsPage() {
       </h1>
       
       <div className="space-y-4 text-xs leading-relaxed font-medium bg-white p-8 rounded-2xl border border-[#E8DFC9]">
-        <p>By placing an order on NISA (nisafoods.com), you agree to these Terms. All food products are prepared in accordance with standard food hygiene guidelines in Tenali, AP.</p>
+        <p>By placing an order on NISA (nisaourhomefood.in), you agree to these Terms. All food products are prepared in accordance with standard food hygiene guidelines in Tenali, AP.</p>
         <p>Product prices are displayed in Indian Rupees (INR) inclusive of applicable taxes.</p>
       </div>
     </div>

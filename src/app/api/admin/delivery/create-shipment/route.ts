@@ -23,8 +23,8 @@ export async function POST(req: Request) {
       billing_pincode: addr.postal_code || '522201',
       billing_state: addr.state || 'Andhra Pradesh',
       billing_country: 'India',
-      billing_email: order?.guest_email || 'care@nisafoods.com',
-      billing_phone: addr.phone || order?.guest_phone || '9876543210',
+      billing_email: order?.guest_email || 'nisaourhomefood@gmail.com',
+      billing_phone: addr.phone || order?.guest_phone || '7569344938',
       shipping_is_billing: true,
       order_items: items.map((i: any) => ({
         name: i.product_name || 'Andhra Pickle Jar',

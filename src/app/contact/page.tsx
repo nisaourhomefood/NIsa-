@@ -48,7 +48,7 @@ export default function ContactPage() {
               <Phone className="w-5 h-5 text-red-800 shrink-0 mt-0.5" />
               <div>
                 <strong className="block text-stone-900 text-sm font-bold">Phone / WhatsApp Support:</strong>
-                <p>+91 98765 43210 (Mon-Sat, 9 AM - 7 PM IST)</p>
+                <p>+91 75693 44938 (Mon-Sat, 9 AM - 7 PM IST)</p>
               </div>
             </div>
 
@@ -56,7 +56,7 @@ export default function ContactPage() {
               <Mail className="w-5 h-5 text-red-800 shrink-0 mt-0.5" />
               <div>
                 <strong className="block text-stone-900 text-sm font-bold">Email Address:</strong>
-                <p>care@nisafoods.com</p>
+                <p>nisaourhomefood@gmail.com</p>
               </div>
             </div>
 
