@@ -40,20 +40,20 @@ export function Navbar() {
 
       {/* 2. Header */}
       <header className="sticky top-0 z-40 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#E8DFC9] text-stone-900 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-          
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-1 sm:gap-4">
+
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-stone-700 hover:text-stone-900 hover:bg-[#F3ECE2] focus:outline-none"
+            className="lg:hidden p-1.5 sm:p-2 rounded-lg text-stone-700 hover:text-stone-900 hover:bg-[#F3ECE2] focus:outline-none shrink-0"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6 text-[#8B1E10]" /> : <Menu className="w-6 h-6" />}
           </button>
 
           {/* Logo - Official NISA Jar Branding */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0 py-1">
-            <div className="relative h-14 w-14 group-hover:scale-105 transition-transform">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0 py-1 min-w-0">
+            <div className="relative h-10 w-10 sm:h-14 sm:w-14 shrink-0 group-hover:scale-105 transition-transform">
               <Image
                 src="/nisaralogo.png"
                 alt="NISA (నిస) - Mana Inti Vanta"
@@ -63,11 +63,11 @@ export function Navbar() {
                 priority
               />
             </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-2xl tracking-tight text-[#8B1E10] group-hover:text-[#72160B] transition-colors">
+            <div className="flex flex-col min-w-0">
+              <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[#8B1E10] group-hover:text-[#72160B] transition-colors">
                 NISA
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-[#C68B27] font-bold">
+              <span className="hidden sm:block text-[10px] uppercase tracking-widest text-[#C68B27] font-bold whitespace-nowrap">
                 Mana Inti Vanta • Tenali
               </span>
             </div>
@@ -87,12 +87,12 @@ export function Navbar() {
           </nav>
 
           {/* Action Icons: Search, Account, Cart */}
-          <div className="flex items-center space-x-3">
-            
+          <div className="flex items-center gap-0.5 sm:gap-3 shrink-0">
+
             {/* Search */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 rounded-lg text-stone-700 hover:text-[#8B1E10] hover:bg-[#F3ECE2] transition-colors"
+              className="p-1.5 sm:p-2 rounded-lg text-stone-700 hover:text-[#8B1E10] hover:bg-[#F3ECE2] transition-colors shrink-0"
               aria-label="Search catalogue"
             >
               <Search className="w-5 h-5" />
@@ -101,7 +101,7 @@ export function Navbar() {
             {/* My Account */}
             <Link
               href="/account"
-              className="p-2 rounded-lg text-stone-700 hover:text-[#8B1E10] hover:bg-[#F3ECE2] transition-colors"
+              className="p-1.5 sm:p-2 rounded-lg text-stone-700 hover:text-[#8B1E10] hover:bg-[#F3ECE2] transition-colors shrink-0"
               title="My Account & Orders"
             >
               <User className="w-5 h-5" />
@@ -110,7 +110,7 @@ export function Navbar() {
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-xl bg-[#8B1E10] text-[#FAF6F0] hover:bg-[#72160B] transition-all shadow-sm flex items-center gap-2"
+              className="relative p-2 sm:p-2.5 rounded-xl bg-[#8B1E10] text-[#FAF6F0] hover:bg-[#72160B] transition-all shadow-sm flex items-center gap-2 shrink-0"
               aria-label="View Shopping Cart"
             >
               <ShoppingBag className="w-5 h-5 text-amber-200" />
