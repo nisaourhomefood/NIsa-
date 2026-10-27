@@ -9,6 +9,12 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+const CATEGORY_BY_TYPE: Record<string, { label: string; path: string }> = {
+  'non-veg-pickle': { label: 'Pickles', path: '/pickles' },
+  podi: { label: 'Podis', path: '/podis' },
+  sweet: { label: 'Sweets', path: '/sweets' },
+};
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -57,6 +63,19 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   const defaultVariant = product.variants.find((v) => v.is_default) || product.variants[0];
   const url = `${BASE_URL}/products/${product.slug}`;
+  const category = CATEGORY_BY_TYPE[product.product_type];
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+      ...(category
+        ? [{ '@type': 'ListItem', position: 2, name: category.label, item: `${BASE_URL}${category.path}` }]
+        : []),
+      { '@type': 'ListItem', position: category ? 3 : 2, name: product.name, item: url },
+    ],
+  };
 
   const productSchema = {
     '@context': 'https://schema.org',
@@ -91,6 +110,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <ProductDetailClient product={product} relatedProducts={relatedProducts} />
     </>

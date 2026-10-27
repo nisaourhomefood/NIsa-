@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: 'NISA - Mana Inti Vanta',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1200&auto=format&fit=crop',
+        url: `${BASE_URL}/making.png`,
         width: 1200,
         height: 630,
         alt: 'NISA Authentic Andhra Pickles and Sweets from Tenali',
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     title: 'NISA (నిస) – Authentic Andhra Home Pickles & Food',
     description:
       'Small-batch non-veg Andhra pickles made in Tenali with wood-pressed sesame oil. Fast delivery across India.',
-    images: ['https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1200&auto=format&fit=crop'],
+    images: [`${BASE_URL}/making.png`],
   },
   robots: {
     index: true,
@@ -105,7 +105,7 @@ export default function RootLayout({
         alternateName: ['NISA Foods', 'నిస మన ఇంటి వంట', 'NISA Tenali Pickles'],
         url: BASE_URL,
         logo: `${BASE_URL}/nisaralogo.png`,
-        image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1200&auto=format&fit=crop',
+        image: `${BASE_URL}/making.png`,
         description:
           'Authentic handcrafted small-batch Andhra non-veg pickles, roasted podis, and traditional sweets made in Tenali, Andhra Pradesh with cold-pressed sesame oil.',
         address: {
