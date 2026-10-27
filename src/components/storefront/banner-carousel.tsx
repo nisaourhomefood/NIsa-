@@ -11,6 +11,7 @@ interface Banner {
   cta_text: string;
   cta_link: string;
   image_url: string;
+  image_url_mobile: string;
 }
 
 const DEFAULT_BANNERS: Banner[] = [
@@ -20,6 +21,7 @@ const DEFAULT_BANNERS: Banner[] = [
     cta_text: 'Shop All Pickles',
     cta_link: '/products',
     image_url: '/making.png',
+    image_url_mobile: '/making.png',
   },
 ];
 
@@ -31,6 +33,7 @@ function withDefaults(b: Partial<Banner> & { id: string; image_url: string }): B
     cta_text: b.cta_text || 'Shop Now',
     cta_link: b.cta_link || '/products',
     image_url: b.image_url,
+    image_url_mobile: b.image_url_mobile || b.image_url,
   };
 }
 
@@ -82,12 +85,23 @@ export function BannerCarousel() {
     <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
       {/* The whole banner is one link — clicking anywhere on the image navigates to cta_link */}
       <Link href={banner.cta_link} className="absolute inset-0 block" aria-label={banner.cta_text}>
+        {/* Mobile image (below sm) */}
+        <Image
+          src={banner.image_url_mobile}
+          alt={banner.title}
+          fill
+          sizes="100vw"
+          className="object-cover transition-opacity duration-500 sm:hidden"
+          style={{ opacity: isTransitioning ? 0.6 : 1 }}
+          priority
+        />
+        {/* Desktop image (sm and up) */}
         <Image
           src={banner.image_url}
           alt={banner.title}
           fill
           sizes="100vw"
-          className="object-cover transition-opacity duration-500"
+          className="object-cover transition-opacity duration-500 hidden sm:block"
           style={{ opacity: isTransitioning ? 0.6 : 1 }}
           priority
         />

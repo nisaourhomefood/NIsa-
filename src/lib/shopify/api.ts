@@ -317,6 +317,7 @@ export interface HeroBanner {
   cta_text: string;
   cta_link: string;
   image_url: string;
+  image_url_mobile: string;
 }
 
 interface MetaobjectField {
@@ -344,12 +345,15 @@ export async function getShopifyBanners(): Promise<HeroBanner[]> {
 
   return (data?.metaobjects?.nodes || []).map((node) => {
     const get = (key: string) => node.fields.find((f) => f.key === key);
+    const image_url = get('image')?.reference?.image?.url || '';
     return {
       id: node.id,
       title: get('title')?.value || 'NISA — Authentic Andhra Home Food',
       cta_text: get('cta_text')?.value || 'Shop Now',
       cta_link: get('cta_link')?.value || '/products',
-      image_url: get('image')?.reference?.image?.url || '',
+      image_url,
+      // Falls back to the desktop image if no mobile-specific one was uploaded.
+      image_url_mobile: get('image_mobile')?.reference?.image?.url || image_url,
     };
   }).filter((b) => b.image_url);
 }
