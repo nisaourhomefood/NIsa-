@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, ShieldCheck, Heart, Truck, Lock, Share2 } from 'lucide-react';
+import { MapPin, Phone, Mail, ShieldCheck, Heart, Truck, Lock } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -48,17 +48,6 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Social links */}
-            <div className="flex items-center space-x-3 pt-2">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-[#E8DFC9] text-xs font-bold text-stone-700 hover:text-[#8B1E10] transition-colors"
-              >
-                <Share2 className="w-3.5 h-3.5" /> Instagram
-              </a>
-            </div>
           </div>
 
           {/* Shop */}

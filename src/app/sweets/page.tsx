@@ -40,8 +40,29 @@ export default async function SweetsPage() {
         title="Traditional Andhra Sweets"
         intro="Hand-made traditional sweets from Saraswati's kitchen in Tenali — real ingredients, no refined sugar or artificial syrup shortcuts."
         body="NISA's sweets are made the way they'd be made for a festival at home — real nuts, seeds, and natural sweeteners like palm jaggery, hand-rolled in small batches rather than mass-produced. No refined sugar, no artificial syrup, no shortcuts."
+        seoNote="Looking for Andhra traditional sweets online, Tenali sweets, or a laddu made without refined sugar? NISA's sweets are rolled in small batches using real nuts, seeds, and jaggery — the way Saraswati's kitchen in Tenali has always made them for festivals."
         products={products}
         otherProducts={otherProducts}
+        breadcrumbLabel="Sweets"
+        path="/sweets"
+        faqs={[
+          {
+            q: 'Are NISA sweets made with refined sugar?',
+            a: 'No — natural sweeteners like palm jaggery are used instead of refined sugar or artificial syrup.',
+          },
+          {
+            q: 'Do your sweets contain preservatives?',
+            a: "No artificial preservatives — they're made fresh in small batches rather than mass-produced for a long shelf life, so check the product page for how soon to eat them by.",
+          },
+          {
+            q: 'What goes into the Nut & Seed Laddu?',
+            a: 'Real nuts and seeds hand-rolled in small batches — see the exact ingredient list on the product page, since it can vary slightly by batch.',
+          },
+          {
+            q: 'Do you ship sweets pan-India?',
+            a: 'Yes, shipped nationwide and typically arriving in 3–5 business days.',
+          },
+        ]}
       />
     </>
   );

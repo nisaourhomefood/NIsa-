@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getShopifyProducts } from '@/lib/shopify/api';
+import { RECIPE_ARTICLES } from '@/lib/content/recipes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
 
@@ -109,5 +110,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  return [...staticRoutes, ...productRoutes];
+  // Recipe & Story Articles
+  const recipeRoutes: MetadataRoute.Sitemap = RECIPE_ARTICLES.map((a) => ({
+    url: `${BASE_URL}/recipes/${a.slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.65,
+  }));
+
+  return [...staticRoutes, ...productRoutes, ...recipeRoutes];
 }
