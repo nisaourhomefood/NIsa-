@@ -17,7 +17,6 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
-  MessageSquare,
 } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
@@ -380,21 +379,10 @@ export function CartDrawer() {
                 </span>
               </button>
 
-              {/* Direct WhatsApp UPI Alternative */}
-              <Link
-                href="/checkout"
-                onClick={() => setIsCartOpen(false)}
-                className="w-full min-h-[44px] flex items-center justify-center gap-2 border-2 border-emerald-700 text-emerald-800 hover:bg-emerald-50 active:scale-[0.99] font-bold text-xs py-2.5 px-4 rounded-xl transition-colors"
-              >
-                <MessageSquare className="w-4 h-4 shrink-0" />
-                <span>Or Pay via WhatsApp UPI</span>
-                <span className="text-[10px] text-emerald-600 font-semibold">(100% Encrypted)</span>
-              </Link>
-
               {/* New Customer / Saraswati Kitchen Trust Stamp */}
               <div className="text-center bg-[#FAF6F0] border border-[#E8DFC9] rounded-xl p-2">
                 <p className="text-[10px] text-stone-700 font-bold flex items-center justify-center gap-1">
-                  <span>🛡️</span> Handcrafted in Tenali • 100% Prepaid via WhatsApp UPI • Dispatched in 48h
+                  <span>🛡️</span> Handcrafted in Tenali • Secure Shopify Checkout • Dispatched in 48h
                 </p>
               </div>
             </div>

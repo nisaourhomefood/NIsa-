@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default async function SweetsPage() {
   const allProducts = await getShopifyProducts({ first: 250 });
   const products = allProducts.filter((p) => p.product_type === 'sweet');
+  const otherProducts = allProducts.filter((p) => p.product_type !== 'sweet');
 
   const schema = {
     '@context': 'https://schema.org',
@@ -40,6 +41,7 @@ export default async function SweetsPage() {
         intro="Hand-made traditional sweets from Saraswati's kitchen in Tenali — real ingredients, no refined sugar or artificial syrup shortcuts."
         body="NISA's sweets are made the way they'd be made for a festival at home — real nuts, seeds, and natural sweeteners like palm jaggery, hand-rolled in small batches rather than mass-produced. No refined sugar, no artificial syrup, no shortcuts."
         products={products}
+        otherProducts={otherProducts}
       />
     </>
   );

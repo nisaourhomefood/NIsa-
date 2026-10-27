@@ -18,6 +18,10 @@ export async function POST(req: Request) {
     // Revalidate paths
     revalidatePath('/', 'layout');
     revalidatePath('/products', 'page');
+    revalidatePath('/pickles', 'page');
+    revalidatePath('/podis', 'page');
+    revalidatePath('/sweets', 'page');
+    revalidatePath('/combos', 'page');
 
     if (handle) {
       revalidatePath(`/products/${handle}`, 'page');
