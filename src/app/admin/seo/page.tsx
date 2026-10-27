@@ -9,7 +9,7 @@ export default function AdminSEOPage() {
   const [metaTitle, setMetaTitle] = useState('NISA (నిస) - Authentic Small-Batch Andhra Pickles | Tenali AP');
   const [metaDesc, setMetaDesc] = useState('Buy handcrafted Andhra boneless chicken pickle, gongura mutton pickle, sea prawns pickle & chicken podi online. Small-batch home recipes made in Tenali with wood-pressed sesame oil.');
   const [ogImage, setOgImage] = useState('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1200&auto=format&fit=crop');
-  const [canonicalUrl, setCanonicalUrl] = useState('https://nisaourhomefood.in');
+  const [canonicalUrl, setCanonicalUrl] = useState('https://www.nisaourhomefood.in');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSaveSEO = (e: React.FormEvent) => {

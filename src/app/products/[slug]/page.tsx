@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getShopifyProductBySlug, getShopifyProductRecommendations } from '@/lib/shopify/api';
 import { ProductDetailClient } from '@/components/storefront/product-detail-client';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
