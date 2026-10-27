@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo, Suspense } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
 import {
   Search, SlidersHorizontal, PackageX, RotateCcw, ChevronDown, Check, X
@@ -21,21 +22,48 @@ interface FilterPillProps {
 }
 
 function FilterPill({ label, active, isOpen, onToggle, onClose, children }: FilterPillProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
+
+  // The filter row scrolls horizontally (overflow-x-auto), and an ancestor with
+  // overflow-x set clips overflow-y too — so the dropdown can never just be a
+  // normal absolutely-positioned child of the pill. Render it into document.body
+  // instead, positioned from the trigger's real screen coordinates, so it always
+  // draws on top of everything regardless of any ancestor's overflow/scroll.
+  useEffect(() => {
+    if (!isOpen) return;
+    const updatePosition = () => {
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      setCoords({ top: rect.bottom + 8, left: rect.left });
+    };
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isOpen]);
 
   // Close on outside click
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+      const target = e.target as Node;
+      if (triggerRef.current?.contains(target)) return;
+      if (panelRef.current?.contains(target)) return;
+      onClose();
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [isOpen, onClose]);
 
   return (
-    <div ref={ref} className="relative shrink-0">
+    <div className="relative shrink-0">
       <button
+        ref={triggerRef}
         onClick={onToggle}
         className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer select-none ${
           active
@@ -47,12 +75,24 @@ function FilterPill({ label, active, isOpen, onToggle, onClose, children }: Filt
         <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {isOpen && (
-        <div className="absolute top-[calc(100%+8px)] left-0 bg-white rounded-2xl shadow-2xl border border-stone-100 p-3 z-50 min-w-[190px] animate-in fade-in slide-in-from-top-2 duration-150">
-          {/* Arrow pointer */}
-          <div className="absolute -top-2 left-5 w-4 h-4 bg-white border-l border-t border-stone-100 rotate-45" />
-          <div className="relative">{children}</div>
-        </div>
+      {isOpen && coords && typeof document !== 'undefined' && createPortal(
+        <div
+          ref={panelRef}
+          style={{ position: 'fixed', top: coords.top, left: coords.left }}
+          className="bg-white rounded-2xl shadow-2xl border border-stone-100 p-3 z-50 min-w-[190px] animate-in fade-in slide-in-from-top-2 duration-150"
+        >
+          <div className="flex items-center justify-end mb-1">
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          {children}
+        </div>,
+        document.body
       )}
     </div>
   );
