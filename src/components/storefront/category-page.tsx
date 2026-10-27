@@ -9,9 +9,14 @@ interface CategoryPageProps {
   intro: string;
   body: string;
   products: ProductWithVariants[];
+  otherProducts: ProductWithVariants[];
 }
 
-export function CategoryPage({ eyebrow, title, intro, body, products }: CategoryPageProps) {
+export function CategoryPage({ eyebrow, title, intro, body, products, otherProducts }: CategoryPageProps) {
+  // A category with very few items reads as a dead end on its own — fill the rest of the
+  // page with the rest of the catalogue so there's always something to browse next.
+  const showMore = products.length < 4 && otherProducts.length > 0;
+
   return (
     <div className="bg-[#FAF6F0] min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-6 text-center space-y-3">
@@ -39,11 +44,27 @@ export function CategoryPage({ eyebrow, title, intro, body, products }: Category
         )}
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <div className="bg-white border border-[#E8DFC9] rounded-2xl p-6 sm:p-8 text-sm text-stone-700 leading-relaxed font-medium">
           {body}
         </div>
       </div>
+
+      {showMore && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-4">
+          <h2 className="text-xl sm:text-2xl font-black text-stone-900">More From NISA</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-5">
+            {otherProducts.slice(0, 8).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="text-center pt-2">
+            <Link href="/products" className="inline-block bg-white border border-[#E8DFC9] text-stone-900 text-xs font-extrabold px-5 py-2.5 rounded-xl hover:border-[#8B1E10]/40">
+              View Full Catalogue
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

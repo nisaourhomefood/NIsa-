@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
+import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Truck, Tag, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -225,15 +225,6 @@ export default function CartPage() {
                 </span>
                 <span className="text-[10px] font-bold text-white/80">Shopify Secure <span className="text-white/40">•</span> UPI / Cards / NetBanking</span>
               </Button>
-
-              <Link
-                href="/checkout"
-                className="w-full min-h-[44px] flex items-center justify-center gap-2 border-2 border-emerald-700 text-emerald-800 hover:bg-emerald-50 font-bold text-xs py-2.5 px-4 rounded-xl transition-colors"
-              >
-                <MessageSquare className="w-4 h-4 shrink-0" />
-                <span>Or Pay via WhatsApp UPI</span>
-                <span className="text-[10px] text-emerald-600 font-semibold">(100% Encrypted)</span>
-              </Link>
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default async function PicklesPage() {
   const allProducts = await getShopifyProducts({ first: 250 });
   const products = allProducts.filter((p) => p.product_type === 'non-veg-pickle');
+  const otherProducts = allProducts.filter((p) => p.product_type !== 'non-veg-pickle');
 
   const schema = {
     '@context': 'https://schema.org',
@@ -40,6 +41,7 @@ export default async function PicklesPage() {
         intro="Boneless chicken, gongura mutton, prawns, and more — hand-cooked in small 5kg brass Uruli batches using wood-pressed sesame oil, Guntur red chilies, and zero artificial preservatives."
         body="Every NISA pickle starts the same way: fresh meat, pure cold wood-pressed sesame oil (nuvvula nune), and hand-pounded Guntur red chilies, slow-cooked in small batches in Saraswati's home kitchen in Tenali, Andhra Pradesh. No commercial vinegar, no chemical preservatives — just the traditional recipe passed down through the family, oil-sealed in jars and shipped fresh across India within 24 hours of cooking."
         products={products}
+        otherProducts={otherProducts}
       />
     </>
   );
