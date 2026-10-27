@@ -82,16 +82,18 @@ export function BannerCarousel() {
   const banner = banners[current];
 
   return (
-    <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
+    <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px] bg-[#1C0A08]">
       {/* The whole banner is one link — clicking anywhere on the image navigates to cta_link */}
       <Link href={banner.cta_link} className="absolute inset-0 block" aria-label={banner.cta_text}>
-        {/* Mobile image (below sm) */}
+        {/* Mobile image (below sm). object-contain (not cover) so a banner that has its own
+            text/design baked in is never cropped — it just letterboxes on this bg color
+            instead of cutting content off on narrower or differently-shaped phone screens. */}
         <Image
           src={banner.image_url_mobile}
           alt={banner.title}
           fill
           sizes="100vw"
-          className="object-cover transition-opacity duration-500 sm:hidden"
+          className="object-contain transition-opacity duration-500 sm:hidden"
           style={{ opacity: isTransitioning ? 0.6 : 1 }}
           priority
         />
@@ -101,7 +103,7 @@ export function BannerCarousel() {
           alt={banner.title}
           fill
           sizes="100vw"
-          className="object-cover transition-opacity duration-500 hidden sm:block"
+          className="object-contain transition-opacity duration-500 hidden sm:block"
           style={{ opacity: isTransitioning ? 0.6 : 1 }}
           priority
         />

@@ -1,15 +1,12 @@
 import { ShopifyProduct, ShopifyProductVariant, ShopifyCollection } from './types';
 import { ProductWithVariants, ProductVariant, Category } from '@/types/database.types';
 
-// Helper to parse weight from title or number
+// Helper to parse weight from title or number.
+// The variant title (e.g. "250g", "1kg") is the merchant's deliberately-chosen size
+// label and is authoritative — it's checked first. Shopify's native "Weight" field is
+// meant for shipping calculations and is often left at a stale/default value per
+// variant, so it's only used as a fallback when the title has no parseable size in it.
 function parseWeightFromTitle(title: string, weight?: number | null, unit?: string | null): number {
-  if (weight && weight > 0) {
-    if (unit?.toLowerCase().includes('kilo') || unit?.toLowerCase() === 'kg') {
-      return Math.round(weight * 1000);
-    }
-    return Math.round(weight);
-  }
-
   const clean = title.toLowerCase();
   const kgMatch = clean.match(/(\d+(\.\d+)?)\s*kg/);
   if (kgMatch) {
@@ -19,6 +16,13 @@ function parseWeightFromTitle(title: string, weight?: number | null, unit?: stri
   const gMatch = clean.match(/(\d+)\s*g/);
   if (gMatch) {
     return parseInt(gMatch[1], 10);
+  }
+
+  if (weight && weight > 0) {
+    if (unit?.toLowerCase().includes('kilo') || unit?.toLowerCase() === 'kg') {
+      return Math.round(weight * 1000);
+    }
+    return Math.round(weight);
   }
 
   return 250;
