@@ -313,12 +313,10 @@ export async function getShopifyVariantPrices(variantIds: string[]): Promise<Map
 
 export interface HeroBanner {
   id: string;
-  title: string;
-  subtitle: string;
+  title: string; // used only as the image's alt text, never rendered
   cta_text: string;
   cta_link: string;
   image_url: string;
-  bg_color: string;
 }
 
 interface MetaobjectField {
@@ -348,12 +346,10 @@ export async function getShopifyBanners(): Promise<HeroBanner[]> {
     const get = (key: string) => node.fields.find((f) => f.key === key);
     return {
       id: node.id,
-      title: get('title')?.value || '',
-      subtitle: get('subtitle')?.value || '',
+      title: get('title')?.value || 'NISA — Authentic Andhra Home Food',
       cta_text: get('cta_text')?.value || 'Shop Now',
       cta_link: get('cta_link')?.value || '/products',
       image_url: get('image')?.reference?.image?.url || '',
-      bg_color: get('bg_color')?.value || '#1C0A08',
     };
-  }).filter((b) => b.image_url && b.title);
+  }).filter((b) => b.image_url);
 }
