@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { getRecipeBySlug, RECIPE_ARTICLES } from '@/lib/content/recipes';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 interface PageProps {
   params: Promise<{ slug: string }>;

@@ -9,7 +9,7 @@ import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

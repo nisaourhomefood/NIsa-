@@ -3,7 +3,7 @@ import { PackageX } from 'lucide-react';
 import { ProductCard } from '@/components/storefront/product-card';
 import { ProductWithVariants } from '@/types/database.types';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 interface FaqItem {
   q: string;

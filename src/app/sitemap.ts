@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getShopifyProducts } from '@/lib/shopify/api';
 import { RECIPE_ARTICLES } from '@/lib/content/recipes';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();

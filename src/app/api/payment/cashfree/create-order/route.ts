@@ -78,7 +78,7 @@ export async function POST(req: Request) {
           customer_phone: cleanPhone.length === 10 ? cleanPhone : '7569344938',
         },
         order_meta: {
-          notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in'}/api/payment/cashfree/webhook`,
+          notify_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in'}/api/payment/cashfree/webhook`,
         },
         order_note: 'Authentic Small-Batch Andhra Food - NISA Tenali',
       };

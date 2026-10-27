@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { getShopifyProducts } from '@/lib/shopify/api';
 import { CategoryPage } from '@/components/storefront/category-page';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nisaourhomefood.in';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nisaourhomefood.in';
 
 export const metadata: Metadata = {
   title: 'Traditional Andhra Sweets Online',
