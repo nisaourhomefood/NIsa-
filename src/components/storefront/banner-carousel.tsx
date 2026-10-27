@@ -7,55 +7,30 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Banner {
   id: string;
-  title: string;
-  subtitle: string;
+  title: string; // used only as the image's alt text, never rendered
   cta_text: string;
   cta_link: string;
   image_url: string;
-  bg_color: string;
 }
 
 const DEFAULT_BANNERS: Banner[] = [
   {
-    id: 'b1',
-    title: 'The Taste of Andhra, Just Like Home.',
-    subtitle: 'Small-batch pickles prepared in Tenali with wood-pressed sesame oil & Guntur red chilies.',
+    id: 'default',
+    title: 'NISA — Authentic Andhra Home Food',
     cta_text: 'Shop All Pickles',
     cta_link: '/products',
-    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=1600&auto=format&fit=crop',
-    bg_color: '#1C0A08',
-  },
-  {
-    id: 'b2',
-    title: 'Gongura Chicken — An Andhra Legend.',
-    subtitle: 'Tangy sorrel leaves folded into spiced boneless chicken. A Tenali household favourite.',
-    cta_text: 'View Gongura Range',
-    cta_link: '/products',
-    image_url: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=1600&auto=format&fit=crop',
-    bg_color: '#0F1A0B',
-  },
-  {
-    id: 'b3',
-    title: 'First Order? ₹99 Off on ₹1499+',
-    subtitle: 'Use code FIRSTORDER99 at checkout. Delivered fresh from our Tenali kitchen across India.',
-    cta_text: 'Claim Your Discount',
-    cta_link: '/products',
-    image_url: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?q=80&w=1600&auto=format&fit=crop',
-    bg_color: '#1A0E04',
+    image_url: '/making.png',
   },
 ];
 
-// Fills in sensible defaults for any field an admin-created banner left blank,
-// so a half-filled entry never renders an empty title or a dead-looking button.
+// Fills in sensible defaults for any field an admin-created banner left blank.
 function withDefaults(b: Partial<Banner> & { id: string; image_url: string }): Banner {
   return {
     id: b.id,
     title: b.title || 'NISA — Authentic Andhra Home Food',
-    subtitle: b.subtitle || '',
     cta_text: b.cta_text || 'Shop Now',
     cta_link: b.cta_link || '/products',
     image_url: b.image_url,
-    bg_color: b.bg_color || '#1C0A08',
   };
 }
 
@@ -105,50 +80,21 @@ export function BannerCarousel() {
 
   return (
     <div className="relative w-full overflow-hidden h-[320px] sm:h-[52vh] sm:min-h-[380px] sm:max-h-[560px]">
-      {/* Background Image with overlay */}
-      <div
-        className="absolute inset-0 transition-opacity duration-500"
-        style={{ opacity: isTransitioning ? 0.6 : 1 }}
-      >
+      {/* The whole banner is one link — clicking anywhere on the image navigates to cta_link */}
+      <Link href={banner.cta_link} className="absolute inset-0 block" aria-label={banner.cta_text}>
         <Image
           src={banner.image_url}
           alt={banner.title}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover transition-opacity duration-500"
+          style={{ opacity: isTransitioning ? 0.6 : 1 }}
           priority
         />
-        {/* Horizontal scrim for the text column + a bottom scrim as a contrast safety net on bright photos */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(90deg, ${banner.bg_color}F7 0%, ${banner.bg_color}CC 45%, ${banner.bg_color}66 100%), linear-gradient(0deg, ${banner.bg_color}99 0%, transparent 55%)`,
-          }}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
-        <div
-          className="max-w-xl transition-all duration-500"
-          style={{ opacity: isTransitioning ? 0 : 1, transform: isTransitioning ? 'translateY(12px)' : 'translateY(0)' }}
-        >
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-3 sm:mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-            {banner.title}
-          </h1>
-          {banner.subtitle && (
-            <p className="text-white/90 text-xs sm:text-base font-medium mb-5 sm:mb-7 max-w-md leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-              {banner.subtitle}
-            </p>
-          )}
-          <Link
-            href={banner.cta_link}
-            className="inline-block bg-[#8B1E10] hover:bg-[#72160B] text-white font-bold px-7 py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-          >
-            {banner.cta_text} →
-          </Link>
-        </div>
-      </div>
+        <span className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 inline-block bg-[#8B1E10] hover:bg-[#72160B] text-white font-bold px-7 py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-xl">
+          {banner.cta_text} →
+        </span>
+      </Link>
 
       {/* Prev / Next Arrows */}
       {slideCount > 1 && (
