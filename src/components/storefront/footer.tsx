@@ -118,7 +118,18 @@ export function Footer() {
         {/* Copyright */}
         <div className="pt-6 border-t border-[#E8DFC9] flex flex-col sm:flex-row justify-between items-center text-xs text-stone-500 gap-2 font-medium">
           <p>© {new Date().getFullYear()} NISA (నిస) – Mana Inti Vanta. All rights reserved. Tenali, AP.</p>
-          <p>Authentic Small-Batch Andhra Food Across India</p>
+          <div className="flex items-center gap-1.5">
+            <span>Designed and Developed by</span>
+            <div className="relative w-6 h-6 shrink-0">
+              <Image
+                src="/dorabeen-logo.png"
+                alt="Dorabeen"
+                fill
+                sizes="24px"
+                className="object-contain"
+              />
+            </div>
+          </div>
         </div>
 
       </div>
