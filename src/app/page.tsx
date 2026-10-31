@@ -4,16 +4,14 @@ import Image from 'next/image';
 import { ArrowRight, Star, Flame, CheckCircle2, HelpCircle, Shield, Clock, Award, Truck } from 'lucide-react';
 import { BannerCarousel } from '@/components/storefront/banner-carousel';
 import { ProductCard } from '@/components/storefront/product-card';
-import { INITIAL_REVIEWS } from '@/lib/data/mock-products';
-import { getShopifyProducts } from '@/lib/shopify/api';
+import { getShopifyProducts, getShopifyBanners } from '@/lib/shopify/api';
 import { Button } from '@/components/ui/button';
 
-async function getLiveProducts() {
-  return getShopifyProducts({ first: 50 });
-}
-
 export default async function HomePage() {
-  const liveProducts = await getLiveProducts();
+  const [liveProducts, banners] = await Promise.all([
+    getShopifyProducts({ first: 50 }),
+    getShopifyBanners(),
+  ]);
 
   // Trending: bestseller products
   const trendingProducts = liveProducts.filter((p) => p.bestseller_status || p.featured_status);
@@ -59,7 +57,7 @@ export default async function HomePage() {
     <div className="bg-[#FAF6F0]">
 
       {/* ── 1. BANNER CAROUSEL ── */}
-      <BannerCarousel />
+      <BannerCarousel initialBanners={banners} />
 
       {/* ── 2. MOST TRENDING PRODUCTS ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -37,22 +37,19 @@ function withDefaults(b: Partial<Banner> & { id: string; image_url: string }): B
   };
 }
 
-export function BannerCarousel() {
-  const [banners, setBanners] = useState<Banner[]>(DEFAULT_BANNERS);
+interface BannerCarouselProps {
+  // Fetched server-side by the homepage and passed in, so the real banner is
+  // already in the first paint — no client fetch, no flash from a default image.
+  initialBanners?: Partial<Banner>[];
+}
+
+export function BannerCarousel({ initialBanners }: BannerCarouselProps) {
+  const banners: Banner[] =
+    initialBanners && initialBanners.length > 0
+      ? initialBanners.filter((b): b is Partial<Banner> & { id: string; image_url: string } => Boolean(b.id && b.image_url)).map(withDefaults)
+      : DEFAULT_BANNERS;
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    fetch('/api/banners')
-      .then((r) => r.json())
-      .then((d) => {
-        if (Array.isArray(d) && d.length > 0) {
-          setBanners(d.map(withDefaults));
-          setCurrent(0);
-        }
-      })
-      .catch(() => null);
-  }, []);
 
   const slideCount = banners.length;
 
